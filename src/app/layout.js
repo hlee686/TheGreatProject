@@ -1,4 +1,5 @@
-import './globals.css'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
+import LoginBtn from './Fetch/LoginBtn'
 import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
