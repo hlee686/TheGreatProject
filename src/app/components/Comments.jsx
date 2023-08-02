@@ -18,6 +18,22 @@ export default function Comments() {
     alert(dataId)
   }, []);
 
+  const myList = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/myList', {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await res.json(); 
+      console.log("데이터", data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Request payload:', { dataId, userIdVal, comment, title });
@@ -51,6 +67,9 @@ export default function Comments() {
 
   return (
     <div>
+
+      <button onClick={myList}>나의 표현들</button>
+
       <form onSubmit={handleSubmit}>
         <input type="hidden" name="dataId" value={dataId} />
         <input type="hidden" name="userIdVal" value={userIdVal} />

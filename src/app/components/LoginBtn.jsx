@@ -17,7 +17,8 @@ export default function LoginBtn() {
   const handleSignIn = async () => {
     try {
       await setLoginClicked(true);
-      const signInResponse = await signIn('google');
+      await signIn("google");
+      await setLogged(true)
     } catch (error) {
       console.error('Error signing in:', error);
     }
