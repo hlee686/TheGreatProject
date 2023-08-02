@@ -87,6 +87,7 @@ export default function Detail() {
         allowFullScreen
       ></iframe>
 
+      <p>Hello</p>
       <h1>{idData.title}</h1>
       {logged ? <p>로그인</p> : <p></p>}
       <p>평점: {idData.vote_average}</p>
