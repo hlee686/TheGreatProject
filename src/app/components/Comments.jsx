@@ -10,6 +10,8 @@ export default function Comments() {
   const [commentsList, setCommentsList] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null)
   const [title, setTitle] = useAtom(idAtom)
+  const [myExp, setMyExp] = useState([])
+  const [myBool, setMyBool] = useState(false)
 
   const [dataId, setDataId] = useAtom(loggedId)
 
@@ -18,6 +20,7 @@ export default function Comments() {
   }, []);
 
   const myList = async (e) => {
+    setMyBool(true)
     e.preventDefault();
     try {
       const res = await fetch(`/api/myList?dataId=${dataId}`, {
@@ -26,8 +29,11 @@ export default function Comments() {
           'Content-Type': 'application/json',
         }
       });
-      const data = await res.json(); 
-      console.log("데이터", data);
+      if (res.ok) {
+        const list = await res.json();
+        console.log('Response data:', list);
+        await setMyExp(list);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -68,6 +74,8 @@ export default function Comments() {
     <div>
 
       <button onClick={myList}>나의 표현들</button>
+
+      {myBool && myExp.map((item, idx)=> <p key={idx}>{item.movie}</p>)}
 
       <form onSubmit={handleSubmit}>
         <input type="hidden" name="dataId" value={dataId} />

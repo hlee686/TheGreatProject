@@ -92,6 +92,7 @@ export default function Detail() {
       <p>평점: {idData.vote_average}</p>
       <div>주연: {actor}</div>
       <img
+        style={{width: "200px", height: "350px"}}
         src={`https://image.tmdb.org/t/p/w500${idData.poster_path}`}
         alt="DetailPoster"
       />
