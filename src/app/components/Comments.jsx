@@ -15,17 +15,16 @@ export default function Comments() {
 
   useEffect(() => {
     setUserIdVal(uuidv4());
-    alert(dataId)
   }, []);
 
   const myList = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/myList', {
+      const res = await fetch(`/api/myList?dataId=${dataId}`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
-        },
+        }
       });
       const data = await res.json(); 
       console.log("데이터", data);

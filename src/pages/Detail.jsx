@@ -14,9 +14,7 @@ export default function Detail() {
   const [logged, setLogged] = useAtom(loggedInAtom);
   const [email, setEmail] = useAtom(loggedId);
 
-  const router = useRouter();
-
-  alert(email)
+  const router = useRouter(); 
 
   useEffect(() => {
     async function fetchMovieData() {
