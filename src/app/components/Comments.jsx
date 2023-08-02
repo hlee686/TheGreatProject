@@ -75,7 +75,29 @@ export default function Comments() {
 
       <button onClick={myList}>나의 표현들</button>
 
-      {myBool && myExp.map((item, idx)=> <div key={idx}>{item.comment}<p style={{fontStyle: 'italic', color: "blue"}}>{item.movie}</p></div>)}
+    {myBool && myExp.map((item) => (
+  <li key={item._id} onClick={() => applyExp(item._id)}>
+    {selectedItem === item._id ? (
+      <input
+        type="text"
+        placeholder="응용"
+        onClick={(e) => e.stopPropagation()}
+        value={item.comment}
+        onChange={(e) => {
+          const updatedCommentsList = commentsList.map((commentItem) =>
+            commentItem._id === item._id
+              ? { ...commentItem, comment: e.target.value }
+              : commentItem
+          );
+          setCommentsList(updatedCommentsList);
+        }}
+      />
+    ) : (
+      item.comment
+    )}
+  </li>
+))}
+
 
       <form onSubmit={handleSubmit}>
         <input type="hidden" name="dataId" value={dataId} />
@@ -91,7 +113,8 @@ export default function Comments() {
         <button type="submit">표현 추가</button>
       </form>
       <div>
-        {/* <ul>
+        {/* <h3>나의 표현:</h3>
+        <ul>
           {commentsList.map((item) => (
             <li key={item._id} onClick={() => applyExp(item._id)}>
               {item.comment}
