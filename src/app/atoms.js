@@ -8,4 +8,4 @@ export const userId = atom('')
 
 export const loggedInAtom = atom(false);
 
-export const loggedId = atom('Hello')
+export const loggedId = atom('slee0628@ersatz.kr')

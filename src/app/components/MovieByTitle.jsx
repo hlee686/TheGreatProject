@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import Link from "next/link"
 import {useAtom, useAtomValue} from 'jotai'
-import { loggedInAtom } from '../atoms';
-
+import { loggedInAtom} from "../atoms"
 const YOUR_TMDB_API_KEY = 'ece6713d4ebc06e447cee9d8efecf96f';
 
 export default function MovieByTitle (){

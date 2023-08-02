@@ -1,5 +1,5 @@
 'use client'
-import { signIn, signOut, getSession} from 'next-auth/react';
+import { signIn, signOut, getSession, useSession} from 'next-auth/react';
 import { useAtom } from 'jotai';
 import { loggedInAtom, loggedId } from "../atoms"
 import Link from 'next/link';
@@ -9,16 +9,25 @@ import {useEffect, useState} from "react"
 export default function LoginBtn() {
 
   const [logged, setLogged] = useAtom(loggedInAtom)
-  const [id, setId] = useAtom(loggedId)
+  const [email, setEmail] = useAtom(loggedId)
+  const [loginClicked, setLoginClicked] = useState(false)
   const router = useRouter();
+  const session = useSession()
 
   const handleSignIn = async () => {
     try {
-      await signIn();
+      await setLoginClicked(true);
+      const signInResponse = await signIn('google');
     } catch (error) {
       console.error('Error signing in:', error);
     }
   };
+
+  useEffect(() => {
+    if (session.data) {
+      setEmail(session.data.user.email); 
+    }
+  }, [session.data]);
 
   const handleSignOut = async () => {
     try {
@@ -28,19 +37,10 @@ export default function LoginBtn() {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const session = await getSession();
-      if (session) {
-        setLogged(true);
-      }
-    };
-    fetchData();
-  }, [logged]);
-
 
   return (
     <div>
+
       {logged && <p>로그인 됨</p>}
       <p onClick={handleSignOut}>LogOut</p>
       <p onClick={handleSignIn}>LogIn</p>

@@ -5,8 +5,11 @@ import FetchGenres from "./FetchGenres"
 import ListByGenres from './ListByGenres';
 import MovieByActor from "./MovieByActor";
 import MovieByTitle from './MovieByTitle';
+import {loggedId} from "../atoms"
+import {useAtom} from 'jotai'
 
 export default function Fetch() {
+
   return (<>
     <h2>Movie By Title</h2>
     <MovieByTitle />

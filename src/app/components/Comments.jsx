@@ -2,6 +2,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import { userId, idAtom, loggedInAtom, loggedId } from '../atoms';
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import {getSession} from "next-auth/react"
 
 export default function Comments() {
   const [comment, setComment] = useState('');
@@ -10,25 +11,38 @@ export default function Comments() {
   const [selectedItem, setSelectedItem] = useState(null)
   const [title, setTitle] = useAtom(idAtom)
 
-  const [id, setId] = useAtom(loggedId)
+  const [dataId, setDataId] = useAtom(loggedId)
 
   useEffect(() => {
     setUserIdVal(uuidv4());
+    alert(dataId)
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('/api/test', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ userIdVal, comment, title }),
-    });
-    if (response.ok) {
-      const list = await response.json();
-      await setCommentsList(list);
-      setComment('');
+    console.log('Request payload:', { dataId, userIdVal, comment, title });
+  
+    try {
+      const response = await fetch('/api/test', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ dataId, userIdVal, comment, title }),
+      });
+  
+      console.log('Response status:', response.status);
+  
+      if (response.ok) {
+        const list = await response.json();
+        console.log('Response data:', list);
+        await setCommentsList(list);
+        setComment('');
+      } else {
+        console.error('Error:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
     }
   };
   const applyExp = async(itemId) => {
@@ -38,6 +52,7 @@ export default function Comments() {
   return (
     <div>
       <form onSubmit={handleSubmit}>
+        <input type="hidden" name="dataId" value={dataId} />
         <input type="hidden" name="userIdVal" value={userIdVal} />
         <input type="hidden" name="title" value={title.title} />
         <textarea
