@@ -75,25 +75,31 @@ export default function Comments() {
 
       <button onClick={myList}>나의 표현들</button>
 
-    {myBool && myExp.map((item) => (
+      {myBool && myExp.map((item) => (
   <li key={item._id} onClick={() => applyExp(item._id)}>
     {selectedItem === item._id ? (
-      <input
-        type="text"
-        placeholder="응용"
-        onClick={(e) => e.stopPropagation()}
-        value={item.comment}
-        onChange={(e) => {
-          const updatedCommentsList = commentsList.map((commentItem) =>
-            commentItem._id === item._id
-              ? { ...commentItem, comment: e.target.value }
-              : commentItem
-          );
-          setCommentsList(updatedCommentsList);
-        }}
-      />
+      <div>
+        <input
+          type="text"
+          placeholder="응용"
+          onClick={(e) => e.stopPropagation()}
+          value={item.comment}
+          onChange={(e) => {
+            const updatedCommentsList = myExp.map((commentItem) =>
+              commentItem._id === item._id
+                ? { ...commentItem, comment: e.target.value }
+                : commentItem
+            );
+            setMyExp(updatedCommentsList);
+          }}
+        />
+        <p style={{ fontStyle: 'italic', color: "blue" }}>{item.movie}</p>
+      </div>
     ) : (
-      item.comment
+      <div>
+        {item.comment}
+        <p style={{ fontStyle: 'italic', color: "blue" }}>{item.movie}</p>
+      </div>
     )}
   </li>
 ))}
