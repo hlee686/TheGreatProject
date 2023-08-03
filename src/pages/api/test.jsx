@@ -3,7 +3,7 @@ import {atom, useAtom} from 'jotai';
 import { userId, idAtom, loggedId} from "../../app/atoms";
 
 export default async function handler(req, res) {
-  const { dataId, userIdVal, comment, title } = req.body;
+  const { dataId, userIdVal, comment, title, updateVal, update } = req.body;
 
   const emailDB = (await connectDB).db("test");
   const userDocument = await emailDB.collection("users").findOne({ email: dataId });
@@ -19,6 +19,7 @@ export default async function handler(req, res) {
     comment: comment,
     logged: userDocument.email
   });
+
 
   let list = await db.collection("post").find().toArray();
 

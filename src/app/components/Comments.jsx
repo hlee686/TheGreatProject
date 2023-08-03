@@ -15,6 +15,9 @@ export default function Comments() {
 
   const [dataId, setDataId] = useAtom(loggedId)
 
+  const [update, setUpdate] = useState(false)
+  const [updateVal, setUpdateVal] = useState('')
+
   useEffect(() => {
     setUserIdVal(uuidv4());
   }, []);
@@ -69,7 +72,28 @@ export default function Comments() {
   const applyExp = async(itemId) => {
     setSelectedItem(itemId === selectedItem ? null : itemId);
   };
-
+  const updateExp = async(comment) => {
+    try {
+      const response = await fetch('/api/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ updateVal: { _id: selectedItem, comment } })
+      });
+  
+      if (response.ok) {
+        const list = await response.json();
+        //await setMyExp(list);
+        setComment('');
+      } else {
+        console.error('Error:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  };
+  
   return (
     <div>
 
@@ -83,7 +107,7 @@ export default function Comments() {
           type="text"
           placeholder="응용"
           onClick={(e) => e.stopPropagation()}
-          value={item.comment}
+          value={updateVal}
           onChange={(e) => {
             const updatedCommentsList = myExp.map((commentItem) =>
               commentItem._id === item._id
@@ -91,6 +115,7 @@ export default function Comments() {
                 : commentItem
             );
             setMyExp(updatedCommentsList);
+            setUpdateVal(e.target.value)
           }}
         />
         <p style={{ fontStyle: 'italic', color: "blue" }}>{item.movie}</p>
@@ -101,6 +126,7 @@ export default function Comments() {
         <p style={{ fontStyle: 'italic', color: "blue" }}>{item.movie}</p>
       </div>
     )}
+      <button onClick={() => updateExp(item.comment)}>응용하기</button>
   </li>
 ))}
 
