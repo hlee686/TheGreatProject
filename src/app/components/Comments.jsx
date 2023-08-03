@@ -18,6 +18,9 @@ export default function Comments() {
   const [update, setUpdate] = useState(false)
   const [updateVal, setUpdateVal] = useState('')
 
+  const [movieTitle, setMovieTitle] = useState('')
+  const [pastData, setPastData] = useState({})
+
   useEffect(() => {
     setUserIdVal(uuidv4());
   }, []);
@@ -74,17 +77,17 @@ export default function Comments() {
   };
   const updateExp = async(comment) => {
     try {
-      const response = await fetch('/api/update', {
+      const response = await fetch(`/api/update?movieTitle=${movieTitle}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ updateVal: { _id: selectedItem, comment } })
+        body: JSON.stringify({ updateVal: { _id: selectedItem, comment }})
       });
   
       if (response.ok) {
         const list = await response.json();
-        //await setMyExp(list);
+        await setPastExpression([...pastExpression, list])
         setComment('');
       } else {
         console.error('Error:', response.statusText);
@@ -93,6 +96,27 @@ export default function Comments() {
       console.error('Fetch error:', error);
     }
   };
+  const pastExp = async (comment, movieTitle) => {
+    try {
+      const response = await fetch(`/api/past?movieTitle=${movieTitle}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.ok) {
+        const list = await response.json();
+        setPastData(prevPastData => ({ ...prevPastData, [movieTitle]: list }));
+        setComment('');
+      } else {
+        console.error('Error:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  };
+  
   
   return (
     <div>
@@ -116,6 +140,7 @@ export default function Comments() {
             );
             setMyExp(updatedCommentsList);
             setUpdateVal(e.target.value)
+            setMovieTitle(item.movie)
           }}
         />
         <p style={{ fontStyle: 'italic', color: "blue" }}>{item.movie}</p>
@@ -127,6 +152,8 @@ export default function Comments() {
       </div>
     )}
       <button onClick={() => updateExp(item.comment)}>응용하기</button>
+      <button onClick={(comment, movie)=>  pastExp(item.comment, item.movie)}>과거표현들</button>
+      <p style={{ backgroundColor: "skyblue" }}>{pastData[item.movie]}</p>
   </li>
 ))}
 
