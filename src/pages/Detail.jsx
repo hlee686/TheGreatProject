@@ -57,8 +57,8 @@ export default function Detail() {
           'https://www.googleapis.com/youtube/v3/search',
           {
             params: {
-              q: idData.title + ' Trailer',
-              key: apiKey,
+              q: idData.title + 'Official Trailer',
+              key: "AIzaSyAJDIU5O8smTCpvfmPqss1DB74IULiGWOY",
               part: 'snippet',
               maxResults: 10,
               type: 'video',
@@ -77,8 +77,10 @@ export default function Detail() {
     fetchTrailer();
   }, [idData]);
 
+
   return (
     <div>
+
       <iframe
         width="560"
         height="315"
