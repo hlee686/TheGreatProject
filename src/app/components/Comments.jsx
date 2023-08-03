@@ -147,7 +147,7 @@ export default function Comments() {
       </div>
     ) : (
       <div>
-        {item.comment}
+        {item.comment.indexOf('/') !== -1 ? item.comment.substring(0, item.comment.indexOf('/')) : item.comment}
         <p style={{ fontStyle: 'italic', color: "blue" }}>{item.movie}</p>
       </div>
     )}
