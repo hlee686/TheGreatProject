@@ -16,4 +16,4 @@ export const commentBool = atom(false)
 
 export const grammar = atom(false)
 
-export const likes = atom(28)
+export const likes = atom(0)

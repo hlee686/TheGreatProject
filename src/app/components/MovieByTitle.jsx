@@ -49,8 +49,8 @@ export default function MovieByTitle (){
       console.log('Response status:', response.status);
   
       if (response.ok) {
-        const data = await response.json();
-        console.log('Response data:', data.likes); // Assuming the likes count is in the 'likes' property of the response
+        const result = await response.json();
+        console.log('Response data:', result.likes); 
       } else {
         console.error('Error:', response.statusText);
       }

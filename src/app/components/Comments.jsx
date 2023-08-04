@@ -23,6 +23,8 @@ export default function Comments() {
 
   const [commentB, setCommentB] = useAtom(commentBool)
   const [like, setLike] = useAtom(likes)
+  const [allExp, setAllExp] = useState([])
+  const [allBool, setAllBool] = useState(false)
 
   useEffect(() => {
     setUserIdVal(uuidv4());
@@ -121,7 +123,25 @@ export default function Comments() {
     }
   };
   
-  
+  const movieExpList = async(e) => {
+    setAllBool(true)
+    e.preventDefault();
+    try {
+      const res = await fetch(`/api/allList?title=${title}`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (res.ok) {
+        const list = await res.json();
+        console.log('Response data:', list);
+        await setAllExp(list);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };  
   return (
     <div>
 
@@ -141,6 +161,13 @@ export default function Comments() {
       </form>
 
       <button onClick={myList}>나의 표현들</button>
+      <button onClick={movieExpList}>이 영화 표현들</button>
+
+      {allBool && allExp.map(item=>(
+        <li key={item._id} onClick={() => applyExp(item._id)}>{item.comment}
+        <p style={{ fontStyle: 'italic', color: "red" }}>{item.logged}</p>
+        </li>
+      ))}
 
       {myBool && myExp.map((item) => (
   <li key={item._id} onClick={() => applyExp(item._id)}>
