@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Link from "next/link"
 
 const YOUR_TMDB_API_KEY = 'ece6713d4ebc06e447cee9d8efecf96f';
 
@@ -61,7 +62,9 @@ const MovieByActor = () => {
               style={{width: "300px", height: "300px"}}
             />
           )}
-           <p style={{textAlign: "center"}}>{movie.title}</p>
+           <Link href={{ pathname: '/Detail', query: { id: movie.id } }}>
+            <p>{movie.title}</p>
+           </Link>
         </div>))}
     </div>
   );

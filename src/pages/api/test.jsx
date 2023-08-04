@@ -1,8 +1,10 @@
 import { connectDB } from "../../../util/database";
 import {atom, useAtom} from 'jotai';
 import { userId, idAtom, loggedId} from "../../app/atoms";
+import {useEffect} from "react"
 
 export default async function handler(req, res) {
+
   const { dataId, userIdVal, comment, title, updateVal, update } = req.body;
 
   const emailDB = (await connectDB).db("test");

@@ -41,7 +41,6 @@ export default function LoginBtn() {
 
   return (
     <div>
-
       {logged && <p>로그인 됨</p>}
       <p onClick={handleSignOut}>LogOut</p>
       <p onClick={handleSignIn}>LogIn</p>

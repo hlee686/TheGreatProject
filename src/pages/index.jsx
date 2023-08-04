@@ -16,13 +16,11 @@ export default function Home() {
   const [email, setEmail] = useAtom(loggedId)
   const router = useRouter()
 
-  // useEffect(()=>{
-  //   setEmail("FUNNIEST MOVIE EVER")
-  // },[])
-
   const route = () => {
     router.push("/Main")
   }
+  
+
 
   return (
     <div>

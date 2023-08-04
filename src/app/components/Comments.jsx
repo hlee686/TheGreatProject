@@ -1,11 +1,11 @@
 import { useAtom, useAtomValue } from 'jotai';
-import { userId, idAtom, loggedInAtom, loggedId } from '../atoms';
+import { userId, idAtom, loggedInAtom, loggedId, commentData, commentBool, grammar } from '../atoms';
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import {getSession} from "next-auth/react"
 
 export default function Comments() {
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useAtom(commentData);
   const [userIdVal, setUserIdVal] = useAtom(userId);
   const [commentsList, setCommentsList] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null)
@@ -20,6 +20,8 @@ export default function Comments() {
 
   const [movieTitle, setMovieTitle] = useState('')
   const [pastData, setPastData] = useState({})
+
+  const [commentB, setCommentB] = useAtom(commentBool)
 
   useEffect(() => {
     setUserIdVal(uuidv4());
@@ -45,9 +47,8 @@ export default function Comments() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log('Request payload:', { dataId, userIdVal, comment, title });
+  const handleSubmit = async () => {
+    console.log('Request payload:', { dataId, userIdVal, comment, title })
   
     try {
       const response = await fetch('/api/test', {
@@ -64,7 +65,8 @@ export default function Comments() {
         const list = await response.json();
         console.log('Response data:', list);
         await setCommentsList(list);
-        setComment('');
+        await setComment("He will happy")
+        await setCommentB(true)
       } else {
         console.error('Error:', response.statusText);
       }
@@ -72,6 +74,7 @@ export default function Comments() {
       console.error('Fetch error:', error);
     }
   };
+
   const applyExp = async(itemId) => {
     setSelectedItem(itemId === selectedItem ? null : itemId);
   };
