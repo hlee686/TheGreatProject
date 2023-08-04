@@ -16,6 +16,7 @@ export default function MovieByTitle (){
   const [like, setLike] = useAtom(likes)
   const [likeId, setLikeId] = useAtom(idLikes)
   const [selectedItem, setSelectedItem] = useState(null)
+  const [likeCnt, setLikeCnt] = useState({})
 
   useEffect(()=>{
     setLikeId(uuidv4())
@@ -58,7 +59,10 @@ export default function MovieByTitle (){
   
       if (response.ok) {
         const result = await response.json();
-        console.log('Response data:', result); 
+        setLikeCnt((prevCounts) => ({
+          ...prevCounts,
+          [title]: result
+        }));
       } else {
         console.error('Error:', response.statusText);
       }
@@ -93,6 +97,7 @@ export default function MovieByTitle (){
            </Link>
 
            <button onClick={()=>getLikes(movie.title)}>좋아요</button>
+           <p>{likeCnt[movie.title] || 0}</p>
         </div>)}
 
     </div>
