@@ -3,22 +3,21 @@ import Fetch from "../app/components/page";
 import axios from "axios";
 import Link from "next/link";
 import Detail from "./Detail"
-import { loggedId } from '../app/atoms';
+import { loggedId, loggedInAtom } from '../app/atoms';
 import {useState} from "react"
 import {useAtom, useAtomValue} from "jotai"
 import { useEffect } from 'react';
 import {useRouter} from "next/navigation"
+import { signIn, signOut, getSession, useSession} from 'next-auth/react';
 
 export default function Main() {
-  const [id, setId] = useAtom(loggedId);
   const router = useRouter()
-
-  useEffect(()=>{
-    console.log(id, "입니다")
-  },[id])
+  const [logged, setLogged] = useAtom(loggedInAtom)
+  const [email, setEmail] = useAtom(loggedId)
 
   return (
     <>
+      {logged ? <div><p>로그인 상태 {email}</p> <button onClick={()=>signOut()}>로그아웃</button></div> : <p>로그아웃 상태</p>}
       <h2>Welcome</h2>
       <Fetch />
     </>

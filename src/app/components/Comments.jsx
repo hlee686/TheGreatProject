@@ -121,6 +121,20 @@ export default function Comments() {
   return (
     <div>
 
+<form onSubmit={handleSubmit}>
+        <input type="hidden" name="dataId" value={dataId} />
+        <input type="hidden" name="userIdVal" value={userIdVal} />
+        <input type="hidden" name="title" value={title.title} />
+        <textarea
+          name="comment"
+          type="textarea"
+          placeholder="표현"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+        />
+        <button type="submit">표현 추가</button>
+      </form>
+
       <button onClick={myList}>나의 표현들</button>
 
       {myBool && myExp.map((item) => (
@@ -158,19 +172,7 @@ export default function Comments() {
 ))}
 
 
-      <form onSubmit={handleSubmit}>
-        <input type="hidden" name="dataId" value={dataId} />
-        <input type="hidden" name="userIdVal" value={userIdVal} />
-        <input type="hidden" name="title" value={title.title} />
-        <textarea
-          name="comment"
-          type="textarea"
-          placeholder="표현"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-        />
-        <button type="submit">표현 추가</button>
-      </form>
+     
       <div>
         {/* <h3>나의 표현:</h3>
         <ul>

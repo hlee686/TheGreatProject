@@ -5,7 +5,7 @@ import axios from "axios"
 import Main from "./Main"
 import LoginBtn from '../app/components/LoginBtn'
 import { Provider, useAtom } from 'jotai';
-import { loggedId } from '@/app/atoms'
+import { loggedId, loggedInAtom } from '@/app/atoms'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn, useSession, SessionProvider } from 'next-auth/react';

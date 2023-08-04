@@ -16,9 +16,8 @@ export default function LoginBtn() {
 
   const handleSignIn = async () => {
     try {
-      await setLoginClicked(true);
+      setLoginClicked(true);
       await signIn("google");
-      await setLogged(true)
     } catch (error) {
       console.error('Error signing in:', error);
     }
@@ -27,6 +26,7 @@ export default function LoginBtn() {
   useEffect(() => {
     if (session.data) {
       setEmail(session.data.user.email); 
+      setLogged(true)
     }
   }, [session.data]);
 

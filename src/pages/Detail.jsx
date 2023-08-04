@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAtom } from 'jotai';
 import { idAtom, loggedInAtom, loggedId } from '../app/atoms';
 import Comments from '@/app/components/Comments';
+import { signIn, signOut, getSession, useSession} from 'next-auth/react';
 
 export default function Detail() {
   const [idData, setIdData] = useAtom(idAtom);
@@ -80,7 +81,7 @@ export default function Detail() {
 
   return (
     <div>
-
+      {logged ? <div><p>로그인 상태 {email}</p> <button onClick={()=>signOut()}>로그아웃</button></div> : <p>로그아웃 상태</p>}
       <iframe
         width="560"
         height="315"
