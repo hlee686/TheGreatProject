@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import Link from "next/link"
 import {useAtom, useAtomValue} from 'jotai'
-import { loggedInAtom} from "../atoms"
+import { loggedInAtom, likes} from "../atoms"
 const YOUR_TMDB_API_KEY = 'ece6713d4ebc06e447cee9d8efecf96f';
 
 export default function MovieByTitle (){
@@ -11,6 +11,8 @@ export default function MovieByTitle (){
   const [title, setTitle] = useState('')
   const [clicked, setClicked] = useState(false)
   const [movieList, setMovieList] = useState([])
+
+  const [like, setLike] = useAtom(likes)
 
   const searchTitle = async(e) => {
     e.preventDefault()
@@ -34,6 +36,31 @@ export default function MovieByTitle (){
       fetchData();
     }
   }, [clicked, title]);
+
+  const getLikes = async (title) => {
+    try {
+      const response = await fetch(`/api/likes?title=${title}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      console.log('Response status:', response.status);
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Response data:', data.likes); // Assuming the likes count is in the 'likes' property of the response
+      } else {
+        console.error('Error:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  };
+  
+  
+
   return (
     <div style={{display: "flex", flexDirection: "row"}}>
        <form onSubmit={searchTitle}>
@@ -56,6 +83,8 @@ export default function MovieByTitle (){
            <Link href={{ pathname: '/Detail', query: { id: movie.id } }}>
             <p>{movie.title}</p>
            </Link>
+
+           <button onClick={()=>getLikes(movie.title)}>좋아요</button>
         </div>)}
 
     </div>

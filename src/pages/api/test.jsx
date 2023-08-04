@@ -1,11 +1,12 @@
 import { connectDB } from "../../../util/database";
 import {atom, useAtom} from 'jotai';
-import { userId, idAtom, loggedId} from "../../app/atoms";
-import {useEffect} from "react"
+import { userId, idAtom, loggedId, likes} from "../../app/atoms";
 
 export default async function handler(req, res) {
 
-  const { dataId, userIdVal, comment, title, updateVal, update } = req.body;
+  const likeCnt = atom(likes)
+
+  const { dataId, userIdVal, comment, title, updateVal, update} = req.body;
 
   const emailDB = (await connectDB).db("test");
   const userDocument = await emailDB.collection("users").findOne({ email: dataId });
@@ -19,7 +20,8 @@ export default async function handler(req, res) {
     _id: userIdVal,
     movie: title.title,
     comment: comment,
-    logged: userDocument.email
+    logged: userDocument.email,
+    likes: likeCnt.init.init
   });
 
 

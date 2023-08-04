@@ -1,5 +1,5 @@
 import { useAtom, useAtomValue } from 'jotai';
-import { userId, idAtom, loggedInAtom, loggedId, commentData, commentBool, grammar } from '../atoms';
+import { userId, idAtom, loggedInAtom, loggedId, commentData, commentBool, grammar, likes } from '../atoms';
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import {getSession} from "next-auth/react"
@@ -22,6 +22,7 @@ export default function Comments() {
   const [pastData, setPastData] = useState({})
 
   const [commentB, setCommentB] = useAtom(commentBool)
+  const [like, setLike] = useAtom(likes)
 
   useEffect(() => {
     setUserIdVal(uuidv4());
@@ -135,6 +136,7 @@ export default function Comments() {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         />
+        <input type="hidden" name="like" value={like} />
         <button type="submit">표현 추가</button>
       </form>
 
