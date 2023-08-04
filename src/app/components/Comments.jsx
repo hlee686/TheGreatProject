@@ -47,7 +47,8 @@ export default function Comments() {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     console.log('Request payload:', { dataId, userIdVal, comment, title })
   
     try {
@@ -65,8 +66,7 @@ export default function Comments() {
         const list = await response.json();
         console.log('Response data:', list);
         await setCommentsList(list);
-        await setComment("He will happy")
-        await setCommentB(true)
+        await setComment(comment)
       } else {
         console.error('Error:', response.statusText);
       }
@@ -168,8 +168,8 @@ export default function Comments() {
         <p style={{ fontStyle: 'italic', color: "blue" }}>{item.movie}</p>
       </div>
     )}
-      <button onClick={() => updateExp(item.comment)}>응용하기</button>
-      <button onClick={(comment, movie)=>  pastExp(item.comment, item.movie)}>과거표현들</button>
+      <button type="button" onClick={() => updateExp(item.comment)}>응용하기</button>
+      <button type="button" onClick={() => pastExp(item.comment, item.movie)}>과거표현들</button>
       <p style={{ backgroundColor: "skyblue" }}>{pastData[item.movie]}</p>
   </li>
 ))}
