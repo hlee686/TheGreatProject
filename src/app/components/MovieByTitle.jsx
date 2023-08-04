@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import Link from "next/link"
 import {useAtom, useAtomValue} from 'jotai'
-import { loggedInAtom, likes} from "../atoms"
+import { loggedInAtom, likes, idLikes} from "../atoms"
+import { v4 as uuidv4 } from 'uuid';
 const YOUR_TMDB_API_KEY = 'ece6713d4ebc06e447cee9d8efecf96f';
 
 export default function MovieByTitle (){
@@ -13,6 +14,12 @@ export default function MovieByTitle (){
   const [movieList, setMovieList] = useState([])
 
   const [like, setLike] = useAtom(likes)
+  const [likeId, setLikeId] = useAtom(idLikes)
+  const [selectedItem, setSelectedItem] = useState(null)
+
+  useEffect(()=>{
+    setLikeId(uuidv4())
+  },[])
 
   const searchTitle = async(e) => {
     e.preventDefault()
@@ -40,17 +47,18 @@ export default function MovieByTitle (){
   const getLikes = async (title) => {
     try {
       const response = await fetch(`/api/likes?title=${title}`, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ likeId}),
       });
   
       console.log('Response status:', response.status);
   
       if (response.ok) {
         const result = await response.json();
-        console.log('Response data:', result.likes); 
+        console.log('Response data:', result); 
       } else {
         console.error('Error:', response.statusText);
       }
