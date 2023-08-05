@@ -61,7 +61,7 @@ export default function MovieByTitle (){
         const result = await response.json();
         setLikeCnt((prevCounts) => ({
           ...prevCounts,
-          [title]: result
+          [title]: result.likeCnt
         }));
       } else {
         console.error('Error:', response.statusText);
