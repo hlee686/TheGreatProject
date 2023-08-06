@@ -28,7 +28,10 @@ const MovieByActor = () => {
             `https://api.themoviedb.org/3/discover/movie?api_key=${YOUR_TMDB_API_KEY}&with_cast=${actorId}`
           );
 
-          setMovieResponse(movieResponse?.data?.results || []);
+          const sortedMovies = movieResponse.data.results.sort((a, b) => b.vote_count - a.vote_count);
+
+          setMovieResponse(sortedMovies);
+          
         } catch (error) {
           console.error('Error fetching data:', error);
         }

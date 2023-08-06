@@ -59,12 +59,13 @@ export default function MovieByTitle (){
   
       if (response.ok) {
         const result = await response.json();
-        setLikeCnt((prevCounts) => ({
+        await setLikeCnt((prevCounts) => ({
           ...prevCounts,
-          [title]: result.likeCnt
+          [title]: result.like
         }));
       } else {
-        console.error('Error:', response.statusText);
+        const result = await response.json();
+        console.log("결과는", result)
       }
     } catch (error) {
       console.error('Fetch error:', error);

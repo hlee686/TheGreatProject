@@ -16,10 +16,10 @@ export default async function handler(req, res) {
                 { $inc: { like: 1 } }
             );
         } else {
-            result = await db.collection("likes").insertOne({ _id: likeId._id, title: title, like: 0 });
+            result = await db.collection("likes").insertOne({ _id: likeId._id, title: title, like: 1 });
         }
 
-        return existingDocument ? res.status(200).json(existingDocument.like) : res.status(200).json(result)
+        return existingDocument ? res.status(200).json(existingDocument) : res.status(200).json(result)
     } catch (error) {
         console.error("Error:", error);
         return res.status(500).json({ error: "An error occurred." });

@@ -8,27 +8,31 @@ const FetchGenres = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!genreInfo) return; 
+      if (!genreInfo) return;
 
       try {
         const genreResponse = await axios.get(
           `https://api.themoviedb.org/3/genre/movie/list?api_key=ece6713d4ebc06e447cee9d8efecf96f`
         );
         const genres = genreResponse.data.genres;
-        const movieGenre = genres.find((genre) => genre.name === genreInfo);
 
-        if (!movieGenre) {
-          console.error("Genre not found!");
-          return;
+        const allMatchingMovies = [];
+
+        for (const genre of genres) {
+          const movieResponse = await axios.get(
+            `https://api.themoviedb.org/3/discover/movie?api_key=ece6713d4ebc06e447cee9d8efecf96f&with_genres=${genre.id}`
+          );
+          const matchingMovies = movieResponse.data.results.filter((movie) =>
+            movie.genre_ids.includes(genre.id)
+          );
+          allMatchingMovies.push(...matchingMovies);
         }
 
-        const movieResponse = await axios.get(
-          `https://api.themoviedb.org/3/discover/movie?api_key=ece6713d4ebc06e447cee9d8efecf96f&with_genres=${movieGenre.id}`
-        );
-        setMovieResponse(movieResponse.data.results);
-        console.log(movieResponse)
+        const sortedMovies = allMatchingMovies.sort((a, b) => b.vote_count - a.vote_count);
+        setMovieResponse(sortedMovies);
+        console.log(sortedMovies)
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("An error occurred:", error);
       }
     };
 
@@ -37,7 +41,7 @@ const FetchGenres = () => {
 
   const genreChange = (e) => {
     e.preventDefault();
-    setGenreInfo(e.target.elements.genre.value); 
+    setGenreInfo(e.target.elements.genre.value);
   };
 
   return (
