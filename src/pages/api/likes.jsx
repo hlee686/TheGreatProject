@@ -9,10 +9,10 @@ export default async function handler(req, res) {
         const db = (await connectDB).db("TimeKiller");
         let result;
 
-        const existingDocument = await db.collection("likes").findOne({ title: title });
+        const existingDocument = await db.collection("likes").findOne({ _id: id });
         if (existingDocument) {
             result = await db.collection("likes").updateOne(
-                { title: title },
+                { _id: id },
                 { $inc: { like: 1 } }
             );
         } else {

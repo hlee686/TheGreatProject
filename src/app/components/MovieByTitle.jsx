@@ -47,7 +47,7 @@ export default function MovieByTitle (){
 
   const getLikes = async (id) => {
     try {
-      const response = await fetch(`/api/likes?title=${title}`, {
+      const response = await fetch(`/api/likes?title=${title}&id=${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
