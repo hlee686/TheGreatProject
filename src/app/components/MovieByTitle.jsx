@@ -14,12 +14,12 @@ export default function MovieByTitle (){
   const [movieList, setMovieList] = useState([])
 
   const [like, setLike] = useAtom(likes)
-  const [likeId, setLikeId] = useAtom(idLikes)
+  const [id, setId] = useAtom(idLikes)
   const [selectedItem, setSelectedItem] = useState(null)
   const [likeCnt, setLikeCnt] = useState({})
 
   useEffect(()=>{
-    setLikeId(uuidv4())
+    setId(uuidv4())
   },[])
 
   const searchTitle = async(e) => {
@@ -31,7 +31,7 @@ export default function MovieByTitle (){
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://api.themoviedb.org/3/search/movie?api_key=${YOUR_TMDB_API_KEY}&query=${title}`
+          `https://api.themoviedb.org/3/search/movie?api_key=${YOUR_TMDB_API_KEY}&query=${title}&sort_by=vote_count.desc`
         );
         const data = await response.json();
         setMovieList(data.results);
@@ -45,14 +45,14 @@ export default function MovieByTitle (){
     }
   }, [clicked, title]);
 
-  const getLikes = async (title) => {
+  const getLikes = async (id) => {
     try {
       const response = await fetch(`/api/likes?title=${title}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ likeId}),
+        body: JSON.stringify({ id}),
       });
   
       console.log('Response status:', response.status);
@@ -61,7 +61,7 @@ export default function MovieByTitle (){
         const result = await response.json();
         await setLikeCnt((prevCounts) => ({
           ...prevCounts,
-          [title]: result.like
+          [id]: result.like
         }));
       } else {
         const result = await response.json();
@@ -97,8 +97,8 @@ export default function MovieByTitle (){
             <p>{movie.title}</p>
            </Link>
 
-           <button onClick={()=>getLikes(movie.title)}>좋아요</button>
-           <p>{likeCnt[movie.title] || 0}</p>
+           <button onClick={()=>getLikes(movie.id)}>좋아요</button>
+           <p>{likeCnt[movie.id] || 0}</p>
         </div>)}
 
     </div>
