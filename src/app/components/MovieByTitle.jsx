@@ -71,8 +71,43 @@ export default function MovieByTitle (){
       console.error('Fetch error:', error);
     }
   };
+  useEffect(() => {
+    async function fetchLikes() {
+      try {
+        const res = await fetch(`/api/initialLikes`, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        if (res.ok) {
+          const list = await res.json();
+          console.log('Response data:', list);
+          
+          const filteredLikes = list.filter(item => movieList.some(movie => movie.id === item._id));
+          
+          const likeCntUpdates = {};
+          filteredLikes.forEach(filter => {
+            likeCntUpdates[filter._id] = filter.like;
+          });
   
+          setLikeCnt(prevCounts => ({
+            ...prevCounts,
+            ...likeCntUpdates
+          }));
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
   
+    if (movieList.length > 0) {
+      fetchLikes();
+    }
+  
+  }, [movieList]); 
+  
+
 
   return (
     <div style={{display: "flex", flexDirection: "row"}}>
@@ -98,7 +133,7 @@ export default function MovieByTitle (){
            </Link>
 
            <button onClick={()=>getLikes(movie.id)}>좋아요</button>
-           <p>{likeCnt[movie.id] || 0}</p>
+           <p>{likeCnt[movie.id] !== undefined ? likeCnt[movie.id] : 0}</p>
         </div>)}
 
     </div>
