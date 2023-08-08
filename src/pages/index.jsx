@@ -9,6 +9,7 @@ import { loggedId, loggedInAtom } from '@/app/atoms'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn, useSession, SessionProvider } from 'next-auth/react';
+import {Top} from "./Top"
 
 
 export default function Home() {
@@ -20,12 +21,15 @@ export default function Home() {
     router.push("/Main")
   }
   
-
+  const topThirty = () => {
+    router.push("/Top")
+  }
 
   return (
     <div>
       <button onClick={route}>MAIN</button>
       <LoginBtn />
+      <button onClick={topThirty}>TOP 30</button>
     </div>
   )
 }

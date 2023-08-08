@@ -71,7 +71,7 @@ export default function Detail() {
               part: 'snippet',
               maxResults: 1,
               type: 'video',
-              order: 'viewCount',
+              order: 'relevance',
             },
           }
         );
