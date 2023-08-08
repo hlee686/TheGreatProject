@@ -18,6 +18,8 @@ export default function Detail() {
 
   const [grammarCheck, setGrammarCheck] = useState(false)
 
+  Hello
+
   useEffect(() => {
     (async () => {
       const options = {
@@ -72,6 +74,7 @@ export default function Detail() {
               maxResults: 1,
               type: 'video',
               order: 'viewCount',
+              videoCaption: "closedCaption",
             },
           }
         );
