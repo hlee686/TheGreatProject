@@ -2,12 +2,11 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useAtom } from 'jotai';
-import { idAtom, loggedInAtom, loggedId, commentData, commentBool } from '../app/atoms';
+import { idAtom, loggedInAtom, loggedId, commentData, commentBool, userId } from '../app/atoms';
 import Comments from '@/app/components/Comments';
 import { signIn, signOut, getSession, useSession} from 'next-auth/react';
 
-import { getSubtitles } from 'youtube-captions-scraper'
-import * as cheerio from 'cheerio';
+import { v4 as uuidv4 } from 'uuid';
 
 
 export default function Detail() {
@@ -17,7 +16,7 @@ export default function Detail() {
   const { id } = useRouter().query;
   const [logged, setLogged] = useAtom(loggedInAtom);
   const [email, setEmail] = useAtom(loggedId);
-  const [commentExp, setCommentExp] = useAtom(commentData)
+  const [comment, setComment] = useAtom(commentData)
   const [commentB, setCommentB] = useAtom(commentBool)
 
   const [grammarCheck, setGrammarCheck] = useState(false)
@@ -29,8 +28,18 @@ export default function Detail() {
   const subtitlesRef = useRef(null);
   const [highlightedText, setHighlightedText] = useState('');
 
+  const [userIdVal, setUserIdVal] = useState(userId)
+  const [highlightList, setHighlightList] = useState([])
+  const [movieTitle, setMovieTitle] = useState('')
+  const [selectedItem, setSelectedItem] = useState(null)
+  const [updateVal, setUpdateVal] = useState('')
+
+  useEffect(() => {
+    setUserIdVal(uuidv4());
+  }, [highlightedText]);
+
   
-let videoId = '4eaZ_48ZYog';
+let videoId = 's-7pyIxz8Qg';
 let apiKey = 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0'
 
 
@@ -44,8 +53,8 @@ let apiKey = 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0'
     'X-RapidAPI-Key': '3c2c74efdcmsh0332beb878c66c5p107718jsne3e0d5bcb02e',
     'X-RapidAPI-Host': 'grammarbot-neural.p.rapidapi.com'
   },
-  data: {
-    text: commentExp,
+  data: {  
+    text: comment,
     lang: 'en'
   }
       };
@@ -66,7 +75,7 @@ let apiKey = 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0'
 
   
   const fetchSubtitles = async () => {
-    const url = `https://subtitles-for-youtube.p.rapidapi.com/subtitles/4eaZ_48ZYog.srt`;
+    const url = `https://subtitles-for-youtube.p.rapidapi.com/subtitles/BWZt4v6b1hI.srt`;
     const options = {
       method: 'GET',
       headers: {
@@ -121,7 +130,8 @@ let apiKey = 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0'
               type: 'video',
               order: 'relevance'
             },
-          }
+          },
+          setMovieTitle(movieData.title)
         );
         const videoId = youtubeResponse.data.items[0]?.id?.videoId;
         setTrailer(videoId);
@@ -137,29 +147,112 @@ let apiKey = 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0'
     signOut()
   }
 
-  const highlight = (event) => {
+  const highlight = async(event) => {
     const selectedText = window.getSelection().toString();
     if (selectedText) {
-      console.log('Highlighted Text:', selectedText);
+      console.log(selectedText);
       localStorage.setItem('highlight', selectedText);
       setHighlightedText(selectedText);
+
+        const response = await fetch('/api/highlightExp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({selectedText, userIdVal, movieTitle}),
+        })
 
       const range = window.getSelection().getRangeAt(0);
 
       const mark = document.createElement('mark');
       range.surroundContents(mark);
+
     }
   };
 
+  const seeHighlights = async(e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`/api/seeHighlights`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (res.ok) {
+        const list = await res.json();
+        console.log('Response data:', list)
+        setHighlightList(list)
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+ 
+  const applyExp = async (itemId) => {
+    setSelectedItem(itemId === selectedItem ? null : itemId);
+  };
+  
+  const updateExp = async () => {
+    try {
+      const response = await fetch(`/api/updateSubs?movieTitle=${movieTitle}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ updateVal: { _id: selectedItem, text: updateVal }})
+      });
+  
+      console.log("Fetch completed:", response);
+  
+      if (response.ok) {
+        const updatedList = highlightList.map((item) =>
+          item._id === selectedItem ? { ...item, text: updateVal } : item
+        );
+        setHighlightList(updatedList);
+      } else {
+        const responseBody = await response.json();
+        console.error('Error:', responseBody.message);
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  };
   
   
+  
+    return (
+      <>
+      <button onClick={fetchSubtitles}>자막보기</button>
+      <p onClick={(e) => { fetchSubtitles(); highlight(e); }}>{subtitles}</p>
+      <button onClick={seeHighlights}>하이라이트 보기</button>
+      {highlightList.map((item) => (
+  <li key={item._id}>
+    <div onClick={() => applyExp(item._id)}>
+      {selectedItem === item._id ? (
+        <div>
+          <input
+            type="text"
+            placeholder="응용"
+            onClick={(e) => e.stopPropagation()}
+            value={updateVal}
+            onChange={(e) => {
+              setUpdateVal(e.target.value);
+            }}
+          />
+          <p>{item.text}</p>
+          <button onClick={() => updateExp()}>응용하기</button>
+        </div>
+      ) : (
+        <p>{item.text}</p>
+      )}
+    </div>
+  </li>
+))}
 
-  return (
-    <>
-    <button onClick={fetchSubtitles}>자막</button>
-    <p ref={subtitlesRef} onClick={highlight}>
-      {subtitles}
-      </p>
+    
+    
 
       {logged ? (
         <div>
