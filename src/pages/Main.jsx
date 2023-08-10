@@ -15,8 +15,10 @@ export default function Main() {
   const [logged, setLogged] = useAtom(loggedInAtom)
   const [email, setEmail] = useAtom(loggedId)
 
+  
   return (
     <>
+
       {logged ? <div><p>로그인 상태 {email}</p> <button onClick={()=>signOut()}>로그아웃</button></div> : <div><p>로그아웃 상태</p><button onClick={()=>router.push("/")}>로그인</button></div>}
       <Fetch />
     </>

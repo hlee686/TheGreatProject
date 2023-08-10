@@ -7,8 +7,8 @@ import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 export const authOptions = {
   providers: [
     GoogleProvider({
-      clientId: '877493700166-km74pmohh12e45m27em75jpkp5g27mp4.apps.googleusercontent.com',
-      clientSecret: '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',
+      clientId: '250547107253-fv03f4g3rmib6o1dh4icqe2j2m77m9ln.apps.googleusercontent.com',
+      clientSecret: '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',
     }),
     GithubProvider({
       clientId: '7b53c7bad3757b8e31b6',
