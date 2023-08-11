@@ -75,18 +75,18 @@ let apiKey = 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0'
 
   
   const fetchSubtitles = async () => {
-    const url = `https://subtitles-for-youtube.p.rapidapi.com/subtitles/BWZt4v6b1hI.srt`;
-    const options = {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Key': '3c2c74efdcmsh0332beb878c66c5p107718jsne3e0d5bcb02e',
-        'X-RapidAPI-Host': 'subtitles-for-youtube.p.rapidapi.com',
-      },
-    };
+    const url = 'https://subtitles-for-youtube.p.rapidapi.com/subtitles/tcdUhdOlz9M.srt';
+const options = {
+	method: 'GET',
+	headers: {
+		'X-RapidAPI-Key': '3c2c74efdcmsh0332beb878c66c5p107718jsne3e0d5bcb02e',
+		'X-RapidAPI-Host': 'subtitles-for-youtube.p.rapidapi.com'
+	}
+};
 
-    try {
-      const response = await fetch(url, options);
-      const result = await response.text();
+try {
+	const response = await fetch(url, options);
+	const result = await response.text();
       const cleanedResult = result
         .replace(/\d+/g, '')
         .replace(/::,/g, '::,')
@@ -118,23 +118,23 @@ let apiKey = 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0'
           `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`
         );
         const cast = castResponse.data.cast[0].name;
-        setActor(cast);
+        await setActor(cast);
         const youtubeResponse = await axios.get(
           'https://www.googleapis.com/youtube/v3/search',
           {
             params: {
-              q: movieData.title + 'Official Trailer',
+              q: movieData.title + 'Official Trailer' + "HD",
               key: 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0',
               part: 'snippet',
               maxResults: 10,
               type: 'video',
-              order: 'relevance',
-              videoCaption: 'closedCaption' 
+              order: 'relevance'
             },
           },
-          setMovieTitle(movieData.title)
+          setMovieTitle(movieData.title),
         );
         const videoId = youtubeResponse.data.items[0]?.id?.videoId;
+
         setTrailer(videoId);
       } catch (error) {
         console.log('Error fetching data:', error.message);
@@ -142,6 +142,7 @@ let apiKey = 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0'
     }
     fetchMovieData()
   }, [id]);
+
 
 
   const handleSignOut = () => {
@@ -225,6 +226,7 @@ let apiKey = 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0'
   
     return (
       <>
+
       <button onClick={fetchSubtitles}>자막보기</button>
       <p onClick={(e) => { fetchSubtitles(); highlight(e); }}>{subtitles}</p>
       <button onClick={seeHighlights}>하이라이트 보기</button>
