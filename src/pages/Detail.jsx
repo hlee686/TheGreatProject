@@ -346,7 +346,7 @@ try {
     {allExp.map((item) => (
       <li key={item._id}>
         <div onClick={() => applyExp(item._id)}>
-          {selectedItem === item._id ? (
+          {selectedItem === item._id && email === item.email ? (
             <div>
               <input
                 type="text"
