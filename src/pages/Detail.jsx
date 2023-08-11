@@ -32,6 +32,7 @@ export default function Detail() {
   const [highlightList, setHighlightList] = useState([])
   const [movieTitle, setMovieTitle] = useState('')
   const [selectedItem, setSelectedItem] = useState(null)
+  const [selectedItemSec, setSelectedItemSec] = useState(null)
   const [updateVal, setUpdateVal] = useState('')
   const [allExp, setAllExp] = useState([])
   const [emailBool, setEmailBool] = useState(false)
@@ -202,7 +203,8 @@ try {
   const applyExp = async (itemId) => {
     setSelectedItem(itemId === selectedItem ? null : itemId);
   };
-  
+
+
   const updateExp = async () => {
     try {
       const response = await fetch(`/api/updateSubs?movieTitle=${movieTitle}`, {
@@ -220,13 +222,16 @@ try {
           item._id === selectedItem ? { ...item, text: updateVal } : item
         );
         setHighlightList(updatedList);
+        const updatedAllExp = allExp.map((item) =>
+        item._id === selectedItem ? { ...item, text: updateVal } : item
+      );
+      setAllExp(updatedAllExp);
       } else {
         const responseBody = await response.json();
         console.error('Error:', responseBody.message);
       }
     } catch (error) {
       console.error('Fetch error:', error);
-      res.status(500).json({ message: "Internal server error" });
     }
   };
   
@@ -256,7 +261,8 @@ try {
   //   fetchData();
   // }, []);
   
-  const byMovie = async () => {
+  const byMovie = async (e) => {
+    e.preventDefault()
     try {
       if (idData.title) {
         const res = await fetch(`/api/allLists?title=${idData.title}`, {
@@ -314,17 +320,37 @@ try {
   </li>
 ))}
 
-
 {emailBool && idDataConfig && (
   <ul>
-    {allExp.map((exp, idx) => (
-      <li key={idx}>
-        {exp.text}
-        <p style={{ fontStyle: 'italic', color: "red" }}>{exp.email}</p>
+    {allExp.map((item) => (
+      <li key={item._id}>
+        <div onClick={() => applyExp(item._id)}>
+          {selectedItem === item._id ? (
+            <div>
+              <input
+                type="text"
+                placeholder="응용"
+                onClick={(e) => e.stopPropagation()}
+                value={updateVal}
+                onChange={(e) => {
+                  setUpdateVal(e.target.value);
+                }}
+              />
+              <div style={{color: "blue", fontStyle: 'italic'}}>{item.title}</div>
+              <button onClick={() => updateExp()}>응용하기</button>
+            </div>
+          ) : (
+            <div>
+              <p>{item.text}</p>
+              <div style={{color: "blue", fontStyle: 'italic'}}>{item.title}</div>
+            </div>
+          )}
+        </div>
       </li>
     ))}
   </ul>
 )}
+
     
 
       {logged ? (
