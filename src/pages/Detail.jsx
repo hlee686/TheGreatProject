@@ -152,7 +152,7 @@ try {
       }
     }
     fetchMovieData()
-  }, []);
+  }, [id]);
 
 
   const handleSignOut = () => {
