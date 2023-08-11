@@ -289,7 +289,6 @@ try {
     return (
       <>
       <button onClick={fetchSubtitles}>자막보기</button>
-      <p onClick={(e) => { fetchSubtitles(); highlight(e); }}>{subtitles}</p>
       <button onClick={seeHighlights}>영화별로 보기</button>
       <button onClick={byMovie}>이영화 보기</button>
       {highlightList.map((item) => (
@@ -365,6 +364,7 @@ try {
         </>
       )}
       <div style={{ position: 'relative' }}>
+        <div style={{display: "flex"}}>
         <iframe
           title="Movie Trailer"
           width="560"
@@ -373,17 +373,18 @@ try {
           frameBorder="0"
           allowFullScreen
         ></iframe>
-        <Comments />
+        <p onClick={(e) => { fetchSubtitles(); highlight(e); }} style={{marginLeft: "50px", width: "400px"}}>{subtitles}</p>
+        </div>
   
-        <div>
+          <div>
           <h1>{idData.title}</h1>
           <p>평점: {idData.vote_average}</p>
           <div>주연: {actor}</div>
-          <img
+          {/* <img
             style={{ width: "200px", height: "350px" }}
             src={`https://image.tmdb.org/t/p/w500${idData.poster_path}`}
             alt="DetailPoster"
-          />
+          /> */}
         </div>
         <div>
       </div>

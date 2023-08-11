@@ -4,7 +4,7 @@ import Link from "next/link"
 
 const YOUR_TMDB_API_KEY = 'ece6713d4ebc06e447cee9d8efecf96f';
 
-const MovieByActor = () => {
+export default function MovieByActor(){
   const [actorInfo, setActorInfo] = useState('');
   const [movieResponse, setMovieResponse] = useState([]);
 
@@ -73,5 +73,4 @@ const MovieByActor = () => {
   );
 };
 
-export default MovieByActor;
 
