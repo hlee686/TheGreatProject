@@ -185,7 +185,7 @@ try {
   const seeHighlights = async(e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`/api/seeHighlights`, {
+      const res = await fetch(`/api/seeHighlights?email=${email}`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
