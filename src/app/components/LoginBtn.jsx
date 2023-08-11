@@ -5,6 +5,7 @@ import { loggedInAtom, loggedId } from "../atoms"
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {useEffect, useState} from "react"
+import "./LoginLayout.css"
 
 export default function LoginBtn() {
 
@@ -41,10 +42,13 @@ export default function LoginBtn() {
 
 
   return (
-    <div>
-      {logged && <p>로그인 됨</p>}
-      <p onClick={handleSignOut}>LogOut</p>
-      <p onClick={handleSignIn}>LogIn</p>
+    <div className="login-container">
+      {logged ? <p className="status">로그인 됨</p> : null}
+      {logged ? (
+        <button className="logout-btn" onClick={handleSignOut}>LogOut</button>
+      ) : (
+        <button className="login-btn" onClick={handleSignIn}>LogIn</button>
+      )}
     </div>
   );
-}
+      }  

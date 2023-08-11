@@ -1,0 +1,26 @@
+.login-container {
+  text-align: center;
+  margin: 50px;
+}
+
+.status {
+  font-size: 1.2rem;
+  color: green;
+  margin-bottom: 10px;
+}
+
+.logout-btn,
+.login-btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logout-btn:hover,
+.login-btn:hover {
+  background-color: #0056b3;
+}

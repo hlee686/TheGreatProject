@@ -5,6 +5,7 @@ import { useAtom } from 'jotai';
 import { idAtom, loggedInAtom, loggedId, commentData, commentBool, userId } from '../app/atoms';
 import Comments from '@/app/components/Comments';
 import { signIn, signOut, getSession, useSession} from 'next-auth/react';
+import "./DetailPage.css"
 
 import { v4 as uuidv4 } from 'uuid';
 import "./DetailStyle.css"
@@ -375,43 +376,36 @@ try {
 
     
 
-      {logged ? (
-        <div>
+{logged ? (
+        <div className="user-info">
           <p>로그인 상태 {email}</p>
           <button onClick={handleSignOut}>로그아웃</button>
         </div>
       ) : (
-        <>
+        <div className="user-info">
           <p>로그아웃 상태</p>
-          <button onClick={() => router.push("/")}>로그인</button>
-        </>
-      )}
-      <div style={{ position: 'relative' }}>
-        <div style={{display: "flex"}}>
-        <iframe
-          title="Movie Trailer"
-          width="560"
-          height="315"
-          src={`https://www.youtube.com/embed/${trailer}?cc_load_policy=1`}
-          frameBorder="0"
-          allowFullScreen
-        ></iframe>
-        <p onClick={(e) => { fetchSubtitles(); highlight(e); }} style={{marginLeft: "50px", width: "400px"}}>{subtitles}</p>
+          <button onClick={() => router.push('/')}>로그인</button>
         </div>
-  
-          <div>
+      )}
+
+      <div className="video-info">
+        <div className="video">
+          <iframe
+            title="Movie Trailer"
+            width="560"
+            height="315"
+            src={`https://www.youtube.com/embed/${trailer}?cc_load_policy=1`}
+            frameBorder="0"
+            allowFullScreen
+          ></iframe>
+        </div>
+        <div className="info">
           <h1>{idData.title}</h1>
           <p>평점: {idData.vote_average}</p>
           <div>주연: {actor}</div>
-          {/* <img
-            style={{ width: "200px", height: "350px" }}
-            src={`https://image.tmdb.org/t/p/w500${idData.poster_path}`}
-            alt="DetailPoster"
-          /> */}
         </div>
-        <div>
-      </div>
       </div>
     </>
   );
-      }  
+      }
+    

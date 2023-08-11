@@ -3,11 +3,13 @@ import Link from "next/link"
 import { filtered } from "../atoms"
 import {atom, useAtom} from "jotai"
 import axios from 'axios';
+import "./page.css"
 
 export default function HighRating() {
   const [movieByRating, setMovieByRating] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [slideIndex, setSlideIndex] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
@@ -45,23 +47,47 @@ export default function HighRating() {
     fetchData();
   }, []);
 
+  const handleSlide = (direction) => {
+    const maxSlideIndex = filteredMovies.length - 1;
 
+    if (direction === 'prev') {
+      setSlideIndex((prevIndex) =>
+        prevIndex === 0 ? maxSlideIndex : prevIndex - 1
+      );
+    } else if (direction === 'next') {
+      setSlideIndex((prevIndex) =>
+        prevIndex === maxSlideIndex ? 0 : prevIndex + 1
+      );
+    }
+  };
 
   return (
-    <div style={{ display: "flex" }}>
-      {filteredMovies.map((movie, idx) => (
-        <div key={idx}>
-          <img
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            alt="Poster"
-            style={{ width: "300px", height: "300px", marginRight: "10px" }}
-          />
+    <div className="slider-container">
+      <div className="slider" style={{ transform: `translateX(-${slideIndex * 310}px)` }}>
+        {filteredMovies.map((movie, idx) => (
+          <div
+            key={idx}
+            className={`slide`}
+          >
+            <img
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt="Poster"
+              style={{ width: '300px', height: '300px', marginRight: '10px' }}
+            />
 
-          <Link href={{ pathname: '/Detail', query: { id: movie.id } }}>
-            <p>{movie.title}</p>
-          </Link>
-        </div>
-      ))}
+            <Link href={{ pathname: '/Detail', query: { id: movie.id } }}>
+              <p>{movie.title}</p>
+            </Link>
+          </div>
+        ))}
+      </div>
+
+      <button className="prev-btn" onClick={() => handleSlide('prev')}>
+        &#10094;
+      </button>
+      <button className="next-btn" onClick={() => handleSlide('next')}>
+        &#10095;
+      </button>
     </div>
   );
 }

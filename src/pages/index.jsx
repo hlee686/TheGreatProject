@@ -10,6 +10,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn, useSession, SessionProvider } from 'next-auth/react';
 import {Top} from "./Top"
+import "./mainPage.css"
 
 
 export default function Home() {
@@ -26,10 +27,10 @@ export default function Home() {
   }
 
   return (
-    <div>
-      <button onClick={route}>MAIN</button>
-      <LoginBtn />
-      <button onClick={topThirty}>TOP 30</button>
-    </div>
-  )
+    <div className="page-container">
+    <button className="main-btn" onClick={route}>MAIN</button>
+    <LoginBtn />
+    {/* <button className="top-thirty-btn" onClick={topThirty}>TOP 30</button> */}
+  </div>
+);
 }
