@@ -35,6 +35,7 @@ export default function Detail() {
   const [updateVal, setUpdateVal] = useState('')
   const [allExp, setAllExp] = useState([])
   const [emailBool, setEmailBool] = useState(false)
+  const [idDataConfig, setIdDataConfig] = useState(false)
 
 
   const router = useRouter()
@@ -121,6 +122,7 @@ try {
         );
         const movieData = response.data;
         setIdData(movieData);
+        setIdDataConfig(true)
         const castResponse = await axios.get(
           `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`
         );
@@ -257,6 +259,7 @@ try {
   
   const byMovie = () => {
     setEmailBool(true)
+    setIdDataConfig(true)
   }
     return (
       <>
@@ -294,7 +297,7 @@ try {
 ))}
 
 
-    {emailBool && allExp.map((exp,idx)=><><li key={idx}>{exp.text}</li>
+    {emailBool && idDataConfig && allExp.map((exp,idx)=><><li key={idx}>{exp.text}</li>
         <p style={{ fontStyle: 'italic', color: "red" }}>{exp.email}</p></>)}
     
 
