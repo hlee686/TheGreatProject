@@ -33,6 +33,10 @@ export default function Detail() {
   const [movieTitle, setMovieTitle] = useState('')
   const [selectedItem, setSelectedItem] = useState(null)
   const [updateVal, setUpdateVal] = useState('')
+  const [allExp, setAllExp] = useState([])
+  const [emailBool, setEmailBool] = useState(false)
+  const [idDataConfig, setIdDataConfig] = useState(false)
+
 
   const router = useRouter()
 
@@ -118,6 +122,7 @@ try {
         );
         const movieData = response.data;
         setIdData(movieData);
+        setIdDataConfig(true)
         const castResponse = await axios.get(
           `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`
         );
@@ -226,14 +231,43 @@ try {
     }
   };
   
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (idData.title) {
+          const res = await fetch(`/api/allLists?title=${idData.title}`, {
+            method: "GET",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if (res.ok) {
+            const list = await res.json();
+            console.log('Response data:', list);
+            await setAllExp(list);
+          }
+        } else {
+          console.error('Title is missing or empty');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
   
+    fetchData();
+  }, []);
   
+  const byMovie = () => {
+    setEmailBool(true)
+    setIdDataConfig(true)
+  }
     return (
       <>
 
       <button onClick={fetchSubtitles}>자막보기</button>
       <p onClick={(e) => { fetchSubtitles(); highlight(e); }}>{subtitles}</p>
-      <button onClick={seeHighlights}>하이라이트 보기</button>
+      <button onClick={seeHighlights}>영화별로 보기</button>
+      <button onClick={()=>byMovie()}>이영화 보기</button>
       {highlightList.map((item) => (
   <li key={item._id}>
     <div onClick={() => applyExp(item._id)}>
@@ -262,7 +296,9 @@ try {
   </li>
 ))}
 
-    
+
+    {emailBool && idDataConfig && allExp.map((exp,idx)=><><li key={idx}>{exp.text}</li>
+        <p style={{ fontStyle: 'italic', color: "red" }}>{exp.email}</p></>)}
     
 
       {logged ? (
