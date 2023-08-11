@@ -153,7 +153,6 @@ try {
   }, []);
 
 
-
   const handleSignOut = () => {
     signOut()
   }
@@ -231,43 +230,62 @@ try {
     }
   };
   
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (idData.title) {
-          const res = await fetch(`/api/allLists?title=${idData.title}`, {
-            method: "GET",
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-          if (res.ok) {
-            const list = await res.json();
-            console.log('Response data:', list);
-            await setAllExp(list);
-          }
-        } else {
-          console.error('Title is missing or empty');
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       if (idData.title) {
+  //         const res = await fetch(`/api/allLists?title=${idData.title}`, {
+  //           method: "GET",
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //           },
+  //         });
+  //         if (res.ok) {
+  //           const list = await res.json();
+  //           console.log('Response data:', list);
+  //           setAllExp(list);
+  //         }
+  //       } else {
+  //         console.error('Title is missing or empty');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
+  
+  //   fetchData();
+  // }, []);
+  
+  const byMovie = async () => {
+    try {
+      if (idData.title) {
+        const res = await fetch(`/api/allLists?title=${idData.title}`, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (res.ok) {
+          const list = await res.json();
+          console.log('Response data:', list);
+          setAllExp(list);
+          setEmailBool(true);
+          setIdDataConfig(true);
         }
-      } catch (error) {
-        console.error('Error fetching data:', error);
+      } else {
+        console.error('Title is missing or empty');
       }
-    };
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
   
-    fetchData();
-  }, []);
-  
-  const byMovie = () => {
-    setEmailBool(true)
-    setIdDataConfig(true)
-  }
     return (
       <>
-
       <button onClick={fetchSubtitles}>자막보기</button>
       <p onClick={(e) => { fetchSubtitles(); highlight(e); }}>{subtitles}</p>
       <button onClick={seeHighlights}>영화별로 보기</button>
-      <button onClick={()=>byMovie()}>이영화 보기</button>
+      <button onClick={byMovie}>이영화 보기</button>
       {highlightList.map((item) => (
   <li key={item._id}>
     <div onClick={() => applyExp(item._id)}>
@@ -297,8 +315,16 @@ try {
 ))}
 
 
-    {emailBool && idDataConfig && allExp.map((exp,idx)=><><li key={idx}>{exp.text}</li>
-        <p style={{ fontStyle: 'italic', color: "red" }}>{exp.email}</p></>)}
+{emailBool && idDataConfig && (
+  <ul>
+    {allExp.map((exp, idx) => (
+      <li key={idx}>
+        {exp.text}
+        <p style={{ fontStyle: 'italic', color: "red" }}>{exp.email}</p>
+      </li>
+    ))}
+  </ul>
+)}
     
 
       {logged ? (
