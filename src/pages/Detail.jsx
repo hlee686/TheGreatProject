@@ -299,7 +299,7 @@ try {
       <>
       <button onClick={fetchSubtitles}>자막보기</button>
       <button onClick={seeHighlights}>나의 표현집</button>
-      <button onClick={byMovie}>남들의 표현을 열여보세요!</button>
+      <button onClick={byMovie}>이 영화 모든표현</button>
 
       {isModalOpen && (
   <div className="modal-overlay">
@@ -308,10 +308,10 @@ try {
       닫기
     </button>
       <ul>
+      <p style={{color: "red"}}>대사를 클릭해서 응용해보세요!</p>
         {highlightList.map((item) => (
           <li key={item._id}>
             <div className="highlight-item" onClick={() => applyExp(item._id)}>
-              <p style={{color: "red"}}>대사를 클릭해서 응용해보세요!</p>
               {selectedItem === item._id ? (
                 <div className="expanded-view">
                   <input
