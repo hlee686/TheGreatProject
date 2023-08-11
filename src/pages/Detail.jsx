@@ -311,6 +311,7 @@ try {
         {highlightList.map((item) => (
           <li key={item._id}>
             <div className="highlight-item" onClick={() => applyExp(item._id)}>
+              <p style={{color: "red"}}>대사를 클릭해서 응용해보세요!</p>
               {selectedItem === item._id ? (
                 <div className="expanded-view">
                   <input
