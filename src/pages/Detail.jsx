@@ -34,6 +34,8 @@ export default function Detail() {
   const [selectedItem, setSelectedItem] = useState(null)
   const [updateVal, setUpdateVal] = useState('')
 
+  const router = useRouter()
+
   useEffect(() => {
     setUserIdVal(uuidv4());
   }, [highlightedText]);
@@ -73,9 +75,6 @@ let apiKey = 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0'
     })();
   }, []);
 
-  useEffect(()=>{
-    //setTrailer("RmC34g6tIAI")
-  },[])
   
   const fetchSubtitles = async () => {
     const url = `https://subtitles-for-youtube.p.rapidapi.com/subtitles/${trailer}.srt`;
@@ -274,7 +273,7 @@ try {
       ) : (
         <>
           <p>로그아웃 상태</p>
-          <button onClick={() => Router.push("/")}>로그인</button>
+          <button onClick={() => router.push("/")}>로그인</button>
         </>
       )}
       <div style={{ position: 'relative' }}>

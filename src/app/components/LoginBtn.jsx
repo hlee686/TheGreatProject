@@ -26,6 +26,7 @@ export default function LoginBtn() {
   useEffect(() => {
     if (session.data) {
       setEmail(session.data.user.email); 
+      console.log(email, "이메일")
       setLogged(true)
     }
   }, [session.data]);

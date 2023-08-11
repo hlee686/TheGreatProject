@@ -8,7 +8,7 @@ export const userId = atom('')
 
 export const loggedInAtom = atom(false);
 
-export const loggedId = atom('')
+export const loggedId = atom('wlxnldh@naver.com')
 
 export const commentData = atom('')
 
