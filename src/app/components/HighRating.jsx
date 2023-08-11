@@ -69,11 +69,15 @@ export default function HighRating() {
             key={idx}
             className={`slide`}
           >
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt="Poster"
-              style={{ width: '300px', height: '300px', marginRight: '10px' }}
-            />
+           <Link href={{ pathname: '/Detail', query: { id: movie.id } }}>
+    <p>
+      <img
+        src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+        alt="Poster"
+        style={{ width: '300px', height: '300px', marginRight: '10px' }}
+      />
+    </p>
+  </Link>
 
             <Link href={{ pathname: '/Detail', query: { id: movie.id } }}>
               <p>{movie.title}</p>
@@ -82,10 +86,10 @@ export default function HighRating() {
         ))}
       </div>
 
-      <button className="prev-btn" onClick={() => handleSlide('prev')}>
+      <button style={{color: "white", fontSize: "50px"}} className="prev-btn" onClick={() => handleSlide('prev')}>
         &#10094;
       </button>
-      <button className="next-btn" onClick={() => handleSlide('next')}>
+      <button style={{color: "white", fontSize: "50px"}} className="next-btn" onClick={() => handleSlide('next')}>
         &#10095;
       </button>
     </div>

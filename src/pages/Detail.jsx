@@ -302,6 +302,7 @@ try {
       <button onClick={seeHighlights}>나의 표현집</button>
       <button onClick={byMovie}>이 영화 모든표현</button>
 
+      <p>{subtitles}</p>
       {isModalOpen && (
   <div className="modal-overlay">
   <div className="modal">
@@ -401,7 +402,7 @@ try {
         </div>
         <div className="info">
           <h1>{idData.title}</h1>
-          <p>평점: {idData.vote_average}</p>
+          <p>평점: {String(idData.vote_average).slice(0,3)}/10</p>
           <div>주연: {actor}</div>
         </div>
       </div>
