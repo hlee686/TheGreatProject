@@ -7,7 +7,7 @@ import Comments from '@/app/components/Comments';
 import { signIn, signOut, getSession, useSession} from 'next-auth/react';
 
 import { v4 as uuidv4 } from 'uuid';
-
+import "./DetailStyle.css"
 
 export default function Detail() {
   const [idData, setIdData] = useAtom(idAtom);
@@ -37,6 +37,7 @@ export default function Detail() {
   const [allExp, setAllExp] = useState([])
   const [emailBool, setEmailBool] = useState(false)
   const [idDataConfig, setIdDataConfig] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
 
   const router = useRouter()
@@ -194,6 +195,7 @@ try {
         const list = await res.json();
         console.log('Response data:', list)
         setHighlightList(list)
+        openModal()
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -285,39 +287,59 @@ try {
       console.error('Error fetching data:', error);
     }
   };
+
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   
     return (
       <>
       <button onClick={fetchSubtitles}>자막보기</button>
-      <button onClick={seeHighlights}>영화별로 보기</button>
-      <button onClick={byMovie}>이영화 보기</button>
-      {highlightList.map((item) => (
-  <li key={item._id}>
-    <div onClick={() => applyExp(item._id)}>
-      {selectedItem === item._id ? (
-        <div>
-          <input
-            type="text"
-            placeholder="응용"
-            onClick={(e) => e.stopPropagation()}
-            value={updateVal}
-            onChange={(e) => {
-              setUpdateVal(e.target.value);
-            }}
-          />
-          <p>{item.text}</p>
-          <div style={{color: "blue", fontStyle: 'italic'}}>{item.title}</div>
-          <button onClick={() => updateExp()}>응용하기</button>
-        </div>
-      ) : (
-        <div>
-        <p>{item.text}</p>
-        <div style={{color: "blue", fontStyle: 'italic'}}>{item.title}</div>
-        </div>
-      )}
+      <button onClick={seeHighlights}>나의 표현집</button>
+      <button onClick={byMovie}>남들의 표현을 열여보세요!</button>
+
+      {isModalOpen && (
+  <div className="modal-overlay">
+  <div className="modal">
+    <button className="close-button" onClick={closeModal}>
+      닫기
+    </button>
+      <ul>
+        {highlightList.map((item) => (
+          <li key={item._id}>
+            <div className="highlight-item" onClick={() => applyExp(item._id)}>
+              {selectedItem === item._id ? (
+                <div className="expanded-view">
+                  <input
+                    type="text"
+                    placeholder="응용"
+                    onClick={(e) => e.stopPropagation()}
+                    value={updateVal}
+                    onChange={(e) => {
+                      setUpdateVal(e.target.value);
+                    }}
+                  />
+                  <p>{item.text}</p>
+                  <div style={{ color: "blue", fontStyle: 'italic' }}>{item.title}</div>
+                  <button onClick={() => updateExp()}>응용하기</button>
+                </div>
+              ) : (
+                <div className="collapsed-view">
+                  <p>{item.text}</p>
+                  <div style={{ color: "blue", fontStyle: 'italic' }}>{item.title}</div>
+                </div>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
-  </li>
-))}
+  </div>
+)}
+
 
 {emailBool && idDataConfig && (
   <ul>
@@ -335,13 +357,13 @@ try {
                   setUpdateVal(e.target.value);
                 }}
               />
-              <div style={{color: "blue", fontStyle: 'italic'}}>{item.title}</div>
+              <div style={{color: "blue", fontStyle: 'italic'}}>{item.email}</div>
               <button onClick={() => updateExp()}>응용하기</button>
             </div>
           ) : (
             <div>
               <p>{item.text}</p>
-              <div style={{color: "blue", fontStyle: 'italic'}}>{item.title}</div>
+              <div style={{color: "blue", fontStyle: 'italic'}}>{item.email}</div>
             </div>
           )}
         </div>
