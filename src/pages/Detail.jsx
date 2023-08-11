@@ -166,7 +166,7 @@ try {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({selectedText, userIdVal, movieTitle}),
+          body: JSON.stringify({selectedText, userIdVal, movieTitle, email}),
         })
 
       const range = window.getSelection().getRangeAt(0);
@@ -250,6 +250,7 @@ try {
             }}
           />
           <p>{item.text}</p>
+          <div style={{color: "blue", fontStyle: 'italic'}}>{item.title}</div>
           <button onClick={() => updateExp()}>응용하기</button>
         </div>
       ) : (
