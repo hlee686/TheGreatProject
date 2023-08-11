@@ -153,7 +153,7 @@ export default function Comments() {
   return (
     <div>
 
-<form onSubmit={handleSubmit}>
+{/* <form onSubmit={handleSubmit}>
         <input type="hidden" name="dataId" value={dataId} />
         <input type="hidden" name="userIdVal" value={userIdVal} />
         <input type="hidden" name="title" value={title.title} />
@@ -166,7 +166,7 @@ export default function Comments() {
         />
         <input type="hidden" name="like" value={like} />
         <button type="submit">표현 추가</button>
-      </form>
+      </form> */}
 
       <button onClick={myList}>나의 표현들</button>
       <button onClick={()=>setAllBool(true)}>이 영화 표현들</button>

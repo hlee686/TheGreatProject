@@ -73,9 +73,12 @@ let apiKey = 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0'
     })();
   }, []);
 
+  useEffect(()=>{
+    //setTrailer("RmC34g6tIAI")
+  },[])
   
   const fetchSubtitles = async () => {
-    const url = 'https://subtitles-for-youtube.p.rapidapi.com/subtitles/tcdUhdOlz9M.srt';
+    const url = `https://subtitles-for-youtube.p.rapidapi.com/subtitles/${trailer}.srt`;
 const options = {
 	method: 'GET',
 	headers: {
@@ -85,22 +88,24 @@ const options = {
 };
 
 try {
-	const response = await fetch(url, options);
+	const response = await fetch(url, options).catch(()=>setSubtitles("자막 없는 영상입니다"));
 	const result = await response.text();
-      const cleanedResult = result
-        .replace(/\d+/g, '')
-        .replace(/::,/g, '::,')
-        .replace(/\./g, '')
-        .replace(/EMBER|AIR PERSON/g, '')
-        .replace(/ --> /g, '')
-        .replace(/::,::,/g, '')
-        .replace(/::::,/g, '')
-        .split('\n')
-        .filter((line) => line.trim() !== '')
-        .join(' ');
+  const cleanedResult = result
+    .replace(/\d+/g, '\n') 
+    .replace(/::,/g, '::,')
+    .replace(/\./g, '')
+    .replace(/EMBER|AIR PERSON/g, '')
+    .replace(/ --> /g, '')
+    .replace(/::,::,/g, '')
+    .replace(/::::,/g, '')
+    .replace(/:/g, '')
+    .replace(/,\s*,/g, '\n')
+    .split('\n')
+    .filter((line) => line.trim() !== '')
+    .join('\n');
       setSubtitles(cleanedResult);
     } catch (error) {
-      console.error(error);
+      console.log("자막이 없어요 아쉽게도")
     }
 };
 
@@ -124,7 +129,7 @@ try {
           {
             params: {
               q: movieData.title + 'Official Trailer' + "HD",
-              key: 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0',
+              key: 'AIzaSyAw1-dU37dGATBSVOX39U59Fcl5d1aywTA',
               part: 'snippet',
               maxResults: 10,
               type: 'video',
@@ -133,7 +138,7 @@ try {
           },
           setMovieTitle(movieData.title),
         );
-        const videoId = youtubeResponse.data.items[0]?.id?.videoId;
+        const videoId = youtubeResponse.data.items[0].id.videoId;
 
         setTrailer(videoId);
       } catch (error) {
@@ -141,7 +146,7 @@ try {
       }
     }
     fetchMovieData()
-  }, [id]);
+  }, []);
 
 
 
@@ -248,7 +253,10 @@ try {
           <button onClick={() => updateExp()}>응용하기</button>
         </div>
       ) : (
+        <div>
         <p>{item.text}</p>
+        <div style={{color: "blue", fontStyle: 'italic'}}>{item.title}</div>
+        </div>
       )}
     </div>
   </li>
