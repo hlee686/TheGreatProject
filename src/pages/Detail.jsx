@@ -128,7 +128,8 @@ let apiKey = 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0'
               part: 'snippet',
               maxResults: 10,
               type: 'video',
-              order: 'relevance'
+              order: 'relevance',
+              videoCaption: 'closedCaption' 
             },
           },
           setMovieTitle(movieData.title)
@@ -274,6 +275,7 @@ let apiKey = 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0'
           frameBorder="0"
           allowFullScreen
         ></iframe>
+        <Comments />
   
         <div>
           <h1>{idData.title}</h1>
@@ -284,7 +286,6 @@ let apiKey = 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0'
             src={`https://image.tmdb.org/t/p/w500${idData.poster_path}`}
             alt="DetailPoster"
           />
-          <Comments />
         </div>
         <div>
       </div>
