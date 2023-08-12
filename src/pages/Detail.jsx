@@ -179,7 +179,7 @@ try {
 
       const mark = document.createElement('mark');
       range.surroundContents(mark);
-
+      alert('표현이 저장되었습니다.');
     }
   };
 
