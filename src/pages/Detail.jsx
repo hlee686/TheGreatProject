@@ -162,6 +162,7 @@ try {
 
   const highlight = async(event) => {
     const selectedText = window.getSelection().toString();
+    alert('표현이 저장되었습니다.');
     if (selectedText) {
       console.log(selectedText);
       localStorage.setItem('highlight', selectedText);
@@ -179,7 +180,6 @@ try {
 
       const mark = document.createElement('mark');
       range.surroundContents(mark);
-      alert('표현이 저장되었습니다.');
     }
   };
 
@@ -302,7 +302,7 @@ try {
       <button onClick={seeHighlights}>나의 표현집</button>
       <button onClick={byMovie}>이 영화 모든표현</button>
 
-      <p>{subtitles}</p>
+      <p onClick={highlight}>{subtitles}</p>
       {isModalOpen && (
   <div className="modal-overlay">
   <div className="modal">
