@@ -136,7 +136,7 @@ try {
           {
             params: {
               q: movieData.title + 'Official Trailer' + "HD",
-              key: 'AIzaSyAw1-dU37dGATBSVOX39U59Fcl5d1aywTA',
+              key: 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0',
               part: 'snippet',
               maxResults: 10,
               type: 'video',
