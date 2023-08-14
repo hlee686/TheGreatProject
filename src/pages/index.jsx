@@ -29,9 +29,9 @@ export default function Home() {
 
   return (
     <div className="page-container">
-    <button className="main-btn" onClick={route}>MAIN</button>
+    { tutorialConfig && <button className="main-btn" onClick={route}>MAIN</button>}
     <LoginBtn />
-    {tutorialConfig && <button className="top-thirty-btn" onClick={topThirty}>TOP 30</button>}
+    <button className="top-thirty-btn" onClick={topThirty}>TOP 30</button>
   </div>
 );
   }

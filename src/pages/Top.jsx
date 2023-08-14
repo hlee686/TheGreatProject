@@ -163,7 +163,7 @@ const completeTutorial = async() => {
     if (res.ok) {
       const list = await res.json();
       console.log("리스트는", list.length)
-      if(list.length > 4){
+      if(list.length > 3){
         await setTutorialConfig(true)
         console.log("튜토리얼", tutorialConfig)
       }
