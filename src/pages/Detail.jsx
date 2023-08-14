@@ -121,6 +121,7 @@ try {
 
   useEffect(() => {
     async function fetchMovieData() {
+
       try {
         const apiKey = 'f1d7de1cecea58c0bb220b2a33361510';
         const response = await axios.get(
@@ -318,13 +319,9 @@ try {
   };
 
   
+  
     return (
       <>
-     <Link href={`https://youtubetranscript.com/?v=uYPbbksJxIg`}>
-        <p>새로운 자막</p>
-      </Link>
-
-
       <button onClick={fetchSubtitles}>자막보기</button>
       <button onClick={byMovie}>이 영화 모든표현</button>
       {logged ? <><button onClick={seeHighlights}>나의 표현집</button></> : <><button disabled>나의 표현집</button></>}
@@ -418,11 +415,8 @@ try {
 
       <div className="video-info">
 
-      <Link href={{ pathname: '/Detail', query: { id: trailer } }}>
-            <p>새로운 자막</p>
-      </Link> 
-
         <div className="video">
+    
           <iframe
             title="Movie Trailer"
             width="560"
@@ -431,6 +425,7 @@ try {
             frameBorder="0"
             allowFullScreen
           ></iframe>
+          
         </div>
         <div className="info">
           <h1>{idData.title}</h1>

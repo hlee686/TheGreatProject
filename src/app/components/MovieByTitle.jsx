@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useAtomValue } from 'jotai';
 import { loggedInAtom, likes, idLikes } from '../atoms';
 import { v4 as uuidv4 } from 'uuid';
+import _ from 'lodash';
 
 const YOUR_TMDB_API_KEY = 'ece6713d4ebc06e447cee9d8efecf96f';
 
@@ -13,6 +14,7 @@ export default function MovieByTitle() {
   const [movieList, setMovieList] = useState([]);
   const [likeCnt, setLikeCnt] = useState({});
   const [likedMovies, setLikedMovies] = useState([]);
+
 
   const searchTitle = async (e) => {
     e.preventDefault();
@@ -101,6 +103,11 @@ export default function MovieByTitle() {
     }
   };
 
+  const debouncedSearchTitle = useMemo(
+    () => _.debounce(searchTitle, 500), 
+    []
+  );
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -121,7 +128,7 @@ export default function MovieByTitle() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <form onSubmit={searchTitle}>
+      <form onSubmit={debouncedSearchTitle}>
         <input type="text" name="title" placeholder="영화제목" />
         <button type="submit">Search</button>
       </form>
@@ -140,12 +147,11 @@ export default function MovieByTitle() {
           </Link>
 
           <button
-            onClick={() => handleLikeClick(movie.id)}
+            onClick={() => throttledHandleLikeClick(movie.id)}
             disabled={movie.liked || likedMovies.includes(movie.id)}
           >
             {movie.liked ? 'Liked' : 'Like'}
           </button>
-
           <p>{likeCnt[movie.id] !== undefined ? likeCnt[movie.id] : 0}</p>
         </div>
       ))}
