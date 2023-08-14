@@ -28,8 +28,7 @@ export default function Home() {
     router.push("/Top")
   }
 
-  console.log(tutorialT, "넘버에요")
-  
+
   return (
     <div className="page-container">
     {tutorialConfig && <button className="main-btn" onClick={route}>MAIN</button>}
