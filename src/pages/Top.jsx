@@ -2,30 +2,30 @@ import React, {useState, useEffect} from "react"
 import { useRouter } from 'next/router';
 import {loggedId} from "../app/atoms"
 import {useAtom} from 'jotai'
+import { v4 as uuidv4 } from 'uuid';
 
-export default function Top (){
-
-  const [selectedItem, setSelectedItem] = useState(null)
-  const [highlightList, setHighlightList] = useState([])
+export default function Top() {
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [highlightList, setHighlightList] = useState([]);
   const [logged, setLogged] = useState(false);
-  const [subtitles, setSubtitles] = useState('')
+  const [subtitles, setSubtitles] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [trailer, setTrailer] = useState('');
   const [highlightedText, setHighlightedText] = useState('');
-  const [userIdVal, setUserIdVal] = useState('')
-  const [movieTitle, setMovieTitle] = useState('')
+  const [userIdVal, setUserIdVal] = useState('');
+  const [movieTitle, setMovieTitle] = useState('');
   const [email, setEmail] = useAtom(loggedId);
-  const [allExp, setAllExp] = useState([])
-  const [emailBool, setEmailBool] = useState(false)
+  const [allExp, setAllExp] = useState([]);
+  const [emailBool, setEmailBool] = useState(false);
+  const [updateVal, setUpdateVal] = useState('');
 
-  const router = useRouter()
-
+  const router = useRouter();
   const { id } = useRouter().query;
 
-  const embedUrl = "https://www.youtube.com/embed/0Jg8AeuPFSc"
+  const embedUrl = "https://www.youtube.com/embed/0Jg8AeuPFSc";
   const openModal = () => {
-    setIsModalOpen(true)
-  }
+    setIsModalOpen(true);
+  };
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -63,28 +63,38 @@ try {
     }
 };
 
-const highlight = async(event) => {
+const highlight = async (event) => {
   const selectedText = window.getSelection().toString();
   alert('표현이 저장되었습니다.');
+
   if (selectedText) {
     console.log(selectedText);
     localStorage.setItem('highlight', selectedText);
-    setHighlightList(selectedText);
 
-      const response = await fetch('/api/highlightExp', {
+    try {
+      await setUserIdVal(uuidv4());
+      const response = await fetch('/api/highlightExpTutorial', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({selectedText, userIdVal, movieTitle, email}),
-      })
+        body: JSON.stringify({ selectedText, userIdVal, email }),
+      });
 
-    const range = window.getSelection().getRangeAt(0);
-
-    const mark = document.createElement('mark');
-    range.surroundContents(mark);
+      if (response.ok) {
+        const range = window.getSelection().getRangeAt(0);
+        const mark = document.createElement('mark');
+        range.surroundContents(mark);
+      } else {
+        const errorResponse = await response.json(); 
+        console.error("Failed to save highlight on the server:", errorResponse.message);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
   }
 };
+
 
 const seeHighlights = async(e) => {
   e.preventDefault();
@@ -141,28 +151,43 @@ const updateExp = async () => {
   }
 };
 
-  return (
-    <div>
-      <iframe
-        width="560"
-        height="315"
-        src={embedUrl}
-        title="YouTube video player"
-        frameBorder="0"
-        allow="autoplay; encrypted-media"
-        allowFullScreen
-      />
-<button onClick={fetchSubtitles}>자막보기</button>
-     {logged ? (
-      <>
-        <button onClick={seeHighlights}>나의 표현집</button>
-      </>
+const completeTutorial = async() => {
+  try {
+    const res = await fetch(`/api/completeTutorial`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    if (res.ok) {
+      const list = await res.json();
+      console.log("리스트는", list)
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+return (
+  <div>
+    <iframe
+      width="560"
+      height="315"
+      src={embedUrl}
+      title="YouTube video player"
+      frameBorder="0"
+      allow="autoplay; encrypted-media"
+      allowFullScreen
+    />
+
+    <button onClick={completeTutorial}>Tutorial 완료</button>
+
+    <button onClick={fetchSubtitles}>자막보기</button>
+    {logged ? (
+      <button onClick={seeHighlights}>나의 표현집</button>
     ) : (
-      <>
-        <button disabled>나의 표현집</button>
-      </>
-    )} 
-    
+      <button disabled>나의 표현집</button>
+    )}
     <p onClick={highlight}>{subtitles}</p>
     {isModalOpen && (
       <div className="modal-overlay">
@@ -203,4 +228,5 @@ const updateExp = async () => {
       </div>
     )}
   </div>
-)};
+);
+}
