@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react"
 import { useRouter } from 'next/router';
-import {loggedId} from "../app/atoms"
+import {loggedId, tutorial} from "../app/atoms"
 import {useAtom} from 'jotai'
 import { v4 as uuidv4 } from 'uuid';
 
@@ -18,6 +18,7 @@ export default function Top() {
   const [allExp, setAllExp] = useState([]);
   const [emailBool, setEmailBool] = useState(false);
   const [updateVal, setUpdateVal] = useState('');
+  const [tutorialConfig, setTutorialConfig] = useAtom(tutorial)
 
   const router = useRouter();
   const { id } = useRouter().query;
@@ -162,6 +163,10 @@ const completeTutorial = async() => {
     if (res.ok) {
       const list = await res.json();
       console.log("리스트는", list.length)
+      if(list.length > 4){
+        await setTutorialConfig(true)
+        console.log("튜토리얼", tutorialConfig)
+      }
     }
   } catch (error) {
     console.error('Error fetching data:', error);

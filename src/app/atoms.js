@@ -19,3 +19,5 @@ export const grammar = atom(false)
 export const likes = atom(0)
 
 export const idLikes = atom('')
+
+export const tutorial = atom(false)
