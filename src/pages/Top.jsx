@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react"
 import { useRouter } from 'next/router';
-import {loggedId, tutorial} from "../app/atoms"
+import {loggedId, tutorial, tutorialNum} from "../app/atoms"
 import {useAtom} from 'jotai'
 import { v4 as uuidv4 } from 'uuid';
 
@@ -19,6 +19,7 @@ export default function Top() {
   const [emailBool, setEmailBool] = useState(false);
   const [updateVal, setUpdateVal] = useState('');
   const [tutorialConfig, setTutorialConfig] = useAtom(tutorial)
+  const [tutorialT, setTutorialT] = useAtom(tutorialNum)
 
   const router = useRouter();
   const { id } = useRouter().query;
@@ -65,6 +66,7 @@ try {
 };
 
 const highlight = async (event) => {
+  setTutorialConfig(true)
   const selectedText = window.getSelection().toString();
   alert('표현이 저장되었습니다.');
 
@@ -154,7 +156,7 @@ const updateExp = async () => {
 
 const completeTutorial = async() => {
   try {
-    const res = await fetch(`/api/completeTutorial`, {
+    const res = await fetch(`/api/completeTutorial?email=${email}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -162,17 +164,15 @@ const completeTutorial = async() => {
     });
     if (res.ok) {
       const list = await res.json();
-      console.log("리스트는", list.length)
-      if(list.length > 3){
-        await setTutorialConfig(true)
-        console.log("튜토리얼", tutorialConfig)
-      }
+      setTutorialT(list.length)
     }
   } catch (error) {
     console.error('Error fetching data:', error);
   }
 };
-
+if(tutorialT > 3){
+  router.push("/")
+}
 return (
   <div>
     <iframe
@@ -185,7 +185,7 @@ return (
       allowFullScreen
     />
 
-    <button onClick={completeTutorial}>Tutorial 완료</button>
+    {tutorialConfig && <button onClick={completeTutorial}>Tutorial 완료</button>}
 
     <button onClick={fetchSubtitles}>자막보기</button>
     {logged ? (
