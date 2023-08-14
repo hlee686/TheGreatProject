@@ -104,7 +104,7 @@ export default function MovieByTitle() {
   };
 
   const debouncedSearchTitle = useMemo(
-    () => _.debounce(searchTitle, 500), 
+    () => _.debounce(searchTitle, 200), 
     []
   );
 
