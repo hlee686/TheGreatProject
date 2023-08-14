@@ -30,7 +30,7 @@ export default function Home() {
     <div className="page-container">
     <button className="main-btn" onClick={route}>MAIN</button>
     <LoginBtn />
-    {/* <button className="top-thirty-btn" onClick={topThirty}>TOP 30</button> */}
+    <button className="top-thirty-btn" onClick={topThirty}>TOP 30</button>
   </div>
 );
 }

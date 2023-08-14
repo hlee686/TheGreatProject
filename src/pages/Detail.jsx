@@ -6,6 +6,8 @@ import { idAtom, loggedInAtom, loggedId, commentData, commentBool, userId } from
 import Comments from '@/app/components/Comments';
 import { signIn, signOut, getSession, useSession} from 'next-auth/react';
 import "./DetailPage.css"
+import ReactTooltip from 'react-tooltip';
+import Link from "next/link"
 
 import { v4 as uuidv4 } from 'uuid';
 import "./DetailStyle.css"
@@ -39,6 +41,7 @@ export default function Detail() {
   const [emailBool, setEmailBool] = useState(false)
   const [idDataConfig, setIdDataConfig] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [byEmails, setByEmails] = useState([])
 
 
   const router = useRouter()
@@ -295,13 +298,37 @@ try {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  const byEmail =async(email) =>{
+    try {
+      const res = await fetch(`/api/seeHighlights?email=${email}`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (res.ok) {
+        const list = await res.json();
+        console.log('Response data:', list)
+        await setByEmails(list)
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   
     return (
       <>
-      <button onClick={fetchSubtitles}>자막보기</button>
-      <button onClick={seeHighlights}>나의 표현집</button>
-      <button onClick={byMovie}>이 영화 모든표현</button>
+     <Link href={`https://youtubetranscript.com/?v=uYPbbksJxIg`}>
+        <p>새로운 자막</p>
+      </Link>
 
+
+      <button onClick={fetchSubtitles}>자막보기</button>
+      <button onClick={byMovie}>이 영화 모든표현</button>
+      {logged ? <><button onClick={seeHighlights}>나의 표현집</button></> : <><button disabled>나의 표현집</button></>}
+      나의 표현집을 보려면 로그인 해주세요!
       <p onClick={highlight}>{subtitles}</p>
       {isModalOpen && (
   <div className="modal-overlay">
@@ -360,13 +387,13 @@ try {
                   setUpdateVal(e.target.value);
                 }}
               />
-              <div style={{color: "blue", fontStyle: 'italic'}}>{item.email}</div>
+              <div style={{color: "blue", fontStyle: 'italic'}}>{item.email}<span style={{color: "black"}}>님의 표현</span></div>
               <button onClick={() => updateExp()}>응용하기</button>
             </div>
           ) : (
-            <div>
+            <div style={{backgroundColor: "orange", width: "250px"}}>
               <p>{item.text}</p>
-              <div style={{color: "blue", fontStyle: 'italic'}}>{item.email}</div>
+              <div style={{color: "blue", fontStyle: 'italic'}} onClick={()=>byEmail(item.email)}>{item.email}<span style={{color: "black"}}>님의 표현</span></div>
             </div>
           )}
         </div>
@@ -390,6 +417,11 @@ try {
       )}
 
       <div className="video-info">
+
+      <Link href={{ pathname: '/Detail', query: { id: trailer } }}>
+            <p>새로운 자막</p>
+      </Link> 
+
         <div className="video">
           <iframe
             title="Movie Trailer"
