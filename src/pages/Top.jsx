@@ -161,7 +161,7 @@ const completeTutorial = async() => {
     });
     if (res.ok) {
       const list = await res.json();
-      console.log("리스트는", list)
+      console.log("리스트는", list.length)
     }
   } catch (error) {
     console.error('Error fetching data:', error);
