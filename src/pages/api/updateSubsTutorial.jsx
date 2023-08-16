@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     const update = {
       $set: { text: updateVal.text, updateTimes: updateVal.updateTimes + 1 }
     };
-
+    
     const result = await db.collection("tutorial").updateOne(filter, update);
 
     if (result.modifiedCount === 1) {

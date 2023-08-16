@@ -197,21 +197,20 @@ const passTutorial = async() =>{
       });
       if (res.ok) {
         const list = await res.json();
-        setTutorialCnt(list.length)
-        console.log("카운트는", tutorialCnt)
+        setTutorialCnt(list.length+1)
       }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
-  if(tutorialCnt > 2 && editSuccess){
+  if(tutorialCnt > 2){
     alert('튜토리얼 완료, 축하합니다!');
     router.push("/Main")
   }
 
 useEffect(()=>{
   passTutorial()
-},[highlighted])
+},[])
 
 return (
   <div>
@@ -226,7 +225,7 @@ return (
     />
 
     {/* {tutorialConfig && <button onClick={completeTutorial} className="tutorial-button">Tutorial 완료</button>} */}
-    <h1>무작위로 표현 3개만 하이라이트 해 보세요!</h1>
+    <h1>자막보기를 켜고, 무작위로 표현 3개만 하이라이트 해 보세요!</h1>
     <button onClick={fetchSubtitles}>자막보기</button>
       <button onClick={seeHighlights}>나의 표현집</button>
     <p onClick={highlight}>{subtitles}</p>
