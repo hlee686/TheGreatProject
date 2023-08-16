@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import {loggedId, tutorial, tutorialNum} from "../app/atoms"
 import {useAtom} from 'jotai'
 import { v4 as uuidv4 } from 'uuid';
+import "./Top.css"
+import "./DetailPage.css"
 
 export default function Top() {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -20,6 +22,10 @@ export default function Top() {
   const [updateVal, setUpdateVal] = useState('');
   const [tutorialConfig, setTutorialConfig] = useAtom(tutorial)
   const [tutorialT, setTutorialT] = useAtom(tutorialNum)
+  const [tutorialCnt, setTutorialCnt] = useState(0)
+  const [highlighted, setHighlighted] = useState(false)
+  const [editSuccess, setEditSuccess] = useState(false)
+
 
   const router = useRouter();
   const { id } = useRouter().query;
@@ -66,8 +72,8 @@ try {
 };
 
 const highlight = async (event) => {
-  setTutorialConfig(true)
   const selectedText = window.getSelection().toString();
+  setHighlighted(!highlighted)
 
   if (selectedText) {
     console.log(selectedText);
@@ -101,7 +107,7 @@ const highlight = async (event) => {
 const seeHighlights = async(e) => {
   e.preventDefault();
   try {
-    const res = await fetch(`/api/seeHighlights?email=${email}`, {
+    const res = await fetch(`/api/seeHighlightsTutorial?email=${email}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -125,25 +131,34 @@ const applyExp = async (itemId) => {
 
 const updateExp = async () => {
   try {
-    const response = await fetch(`/api/updateSubs?movieTitle=${movieTitle}`, {
+    const response = await fetch(`/api/updateSubsTutorial?movieTitle=${movieTitle}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ updateVal: { _id: selectedItem, text: updateVal }})
+      body: JSON.stringify({ updateVal: { _id: selectedItem, text: updateVal, updateTimes: 0 }})
     });
 
     console.log("Fetch completed:", response);
 
     if (response.ok) {
-      const updatedList = highlightList.map((item) =>
-        item._id === selectedItem ? { ...item, text: updateVal } : item
-      );
-      setHighlightList(updatedList);
-      const updatedAllExp = allExp.map((item) =>
-      item._id === selectedItem ? { ...item, text: updateVal } : item
-    );
-    setAllExp(updatedAllExp);
+      const responseBody = await response.json();
+      
+      if (responseBody.success) {
+        const updatedList = highlightList.map((item) =>
+          item._id === selectedItem ? { ...item, text: updateVal } : item
+        );
+        setHighlightList(updatedList);
+        
+        const updatedAllExp = allExp.map((item) =>
+          item._id === selectedItem ? { ...item, text: updateVal} : item
+        );
+        setAllExp(updatedAllExp);
+        setEditSuccess(true)
+      
+      } else {
+        console.error('Update failed:', responseBody.message);
+      }
     } else {
       const responseBody = await response.json();
       console.error('Error:', responseBody.message);
@@ -153,26 +168,50 @@ const updateExp = async () => {
   }
 };
 
-const completeTutorial = async() => {
+
+// const completeTutorial = async() => {
+//   try {
+//     const res = await fetch(`/api/completeTutorial?email=${email}`, {
+//       method: "GET",
+//       headers: {
+//         'Content-Type': 'application/json',
+//       }
+//     });
+//     if (res.ok) {
+//       const list = await res.json();
+//       setTutorialT(list.length)
+//     }
+//   } catch (error) {
+//     console.error('Error fetching data:', error);
+//   }
+// };
+
+
+const passTutorial = async() =>{
   try {
-    const res = await fetch(`/api/completeTutorial?email=${email}`, {
-      method: "GET",
-      headers: {
-        'Content-Type': 'application/json',
+      const res = await fetch(`/api/tutorialCnt?email=${email}`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (res.ok) {
+        const list = await res.json();
+        setTutorialCnt(list.length)
+        console.log("카운트는", tutorialCnt)
       }
-    });
-    if (res.ok) {
-      const list = await res.json();
-      setTutorialT(list.length)
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
-  } catch (error) {
-    console.error('Error fetching data:', error);
+  };
+  if(tutorialCnt > 2 && editSuccess){
+    alert('튜토리얼 완료, 축하합니다!');
+    router.push("/Main")
   }
-};
-if(tutorialT > 2){
-  alert('튜토리얼 완료, 축하합니다!');
-  router.push("/Main")
-}
+
+useEffect(()=>{
+  passTutorial()
+},[highlighted])
 
 return (
   <div>
@@ -186,14 +225,10 @@ return (
       allowFullScreen
     />
 
-    {tutorialConfig && <button onClick={completeTutorial}>Tutorial 완료</button>}
-
+    {/* {tutorialConfig && <button onClick={completeTutorial} className="tutorial-button">Tutorial 완료</button>} */}
+    <h1>무작위로 표현 3개만 하이라이트 해 보세요!</h1>
     <button onClick={fetchSubtitles}>자막보기</button>
-    {logged ? (
       <button onClick={seeHighlights}>나의 표현집</button>
-    ) : (
-      <button disabled>나의 표현집</button>
-    )}
     <p onClick={highlight}>{subtitles}</p>
     {isModalOpen && (
       <div className="modal-overlay">
@@ -202,6 +237,7 @@ return (
             닫기
           </button>
           <ul>
+          <p style={{color: "red"}}>대사를 클릭해서 응용해보세요!</p>
             {highlightList.map((item) => (
               <li key={item._id}>
                 <div className="highlight-item" onClick={() => applyExp(item._id)}>
