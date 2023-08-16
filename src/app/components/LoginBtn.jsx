@@ -43,12 +43,13 @@ export default function LoginBtn() {
 
   return (
     <div className="login-container">
-      {logged ? <p className="status">로그인 됨</p> : null}
-      {logged ? (
+    {logged ? (
+      <>
+        <p className="status">로그인 됨</p>
         <button className="logout-btn" onClick={handleSignOut}>LogOut</button>
-      ) : (
-        <button className="login-btn" onClick={handleSignIn}>LogIn</button>
-      )}
-    </div>
-  );
-      }  
+      </>
+    ) : (
+      <button className="login-btn" onClick={handleSignIn}>LogIn</button>
+    )}
+  </div>
+  )} 
