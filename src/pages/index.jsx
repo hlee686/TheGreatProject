@@ -6,11 +6,12 @@ import Main from "./Main"
 import LoginBtn from '../app/components/LoginBtn'
 import { Provider, useAtom } from 'jotai';
 import { loggedId, loggedInAtom, tutorial, tutorialNum } from '@/app/atoms'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn, useSession, SessionProvider } from 'next-auth/react';
 import {Top} from "./Top"
 import "./mainPage.css"
+import io from 'socket.io-client';
 
 
 export default function Home() {
@@ -20,9 +21,9 @@ export default function Home() {
   const [tutorialT, setTutorialT] = useAtom(tutorialNum)
   const router = useRouter()
 
-  const route = () => {
-    router.push("/Main")
-  }
+  // const route = () => {
+  //   router.push("/Main")
+  // }
   
   const topThirty = () => {
     router.push("/Top")
@@ -31,9 +32,10 @@ export default function Home() {
 
   return (
     <div className="page-container">
-    {tutorialConfig && <button className="main-btn" onClick={route}>MAIN</button>}
+    {/* {tutorialConfig && <button className="main-btn" onClick={route}>MAIN</button>} */}
     <LoginBtn />
-    <button className="top-thirty-btn" onClick={topThirty}>TOP 30</button>
+    <button className="top-thirty-btn" onClick={topThirty}>TUTORIAL</button>
+    
   </div>
 );
   }

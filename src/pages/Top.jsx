@@ -68,7 +68,6 @@ try {
 const highlight = async (event) => {
   setTutorialConfig(true)
   const selectedText = window.getSelection().toString();
-  alert('표현이 저장되었습니다.');
 
   if (selectedText) {
     console.log(selectedText);
@@ -170,9 +169,11 @@ const completeTutorial = async() => {
     console.error('Error fetching data:', error);
   }
 };
-if(tutorialT > 3){
-  router.push("/")
+if(tutorialT > 2){
+  alert('튜토리얼 완료, 축하합니다!');
+  router.push("/Main")
 }
+
 return (
   <div>
     <iframe
