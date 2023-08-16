@@ -142,6 +142,7 @@ const updateExp = async () => {
     console.log("Fetch completed:", response);
 
     if (response.ok) {
+      setEditSuccess(true)
       const responseBody = await response.json();
       
       if (responseBody.success) {
@@ -154,7 +155,6 @@ const updateExp = async () => {
           item._id === selectedItem ? { ...item, text: updateVal} : item
         );
         setAllExp(updatedAllExp);
-        setEditSuccess(true)
       
       } else {
         console.error('Update failed:', responseBody.message);
@@ -203,7 +203,7 @@ const passTutorial = async() =>{
       console.error('Error fetching data:', error);
     }
   };
-  if(tutorialCnt > 2){
+  if(tutorialCnt > 2 && editSuccess){
     alert('튜토리얼 완료, 축하합니다!');
     router.push("/Main")
   }
