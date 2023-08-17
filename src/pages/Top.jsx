@@ -74,6 +74,7 @@ try {
 const highlight = async (event) => {
   const selectedText = window.getSelection().toString();
   setHighlighted(!highlighted)
+  alert("표현이 저장되었습니다.")
 
   if (selectedText) {
     console.log(selectedText);

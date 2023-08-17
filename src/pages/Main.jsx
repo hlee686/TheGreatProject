@@ -1,28 +1,31 @@
-import Image from 'next/image';
-import Fetch from "../app/components/page";
-import axios from "axios";
-import Link from "next/link";
-import Detail from "./Detail"
-import { loggedId, loggedInAtom , loginByEmail, loggedinViaEmail} from '../app/atoms';
-import {useState} from "react"
-import {useAtom, useAtomValue} from "jotai"
-import { useEffect } from 'react';
-import {useRouter} from "next/navigation"
-import { signIn, signOut, getSession, useSession} from 'next-auth/react';
+import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { useAtom } from 'jotai';
+import { loggedInAtom, loginByEmail, loggedinViaEmail, loggedId } from '../app/atoms';
+import { useAtomValue } from 'jotai';
+import Fetch from '@/app/components/page';
 
 export default function Main() {
-  const router = useRouter()
-  const [logged, setLogged] = useAtom(loggedInAtom)
-  const [email, setEmail] = useAtom(loggedId)
-  const [loginEmail, setLoginEmail] = useAtom(loginByEmail)
-  const [loggedinByEmail, setLoggedinByEmail] = useAtom(loggedinViaEmail)
+  const router = useRouter();
+  const [emailLogin, setEmailLogin] = useAtom(loggedinViaEmail);
+  const loginEmail = useAtomValue(loginByEmail);
+  const logged = useAtomValue(loggedInAtom);
+  const email = useAtomValue(loggedId);
 
-  
   return (
     <>
-
-      {logged ? <div><p>로그인 상태 {!loggedinByEmail && {email}}</p> <button onClick={()=>signOut()}>로그아웃</button></div> : <div><p>로그아웃 상태</p><button onClick={()=>router.push("/")}>로그인</button></div>}
-      {loggedinByEmail && <p>{loginEmail}님, 안녕하세요!</p>}
+      {emailLogin ? (
+        <div>
+          <p>로그인 상태 {loginEmail && <span>{email}</span>}</p>
+          <button onClick={() => signOut()}>로그아웃</button>
+        </div>
+      ) : (
+        <div>
+          <p>로그아웃 상태</p>
+          <button onClick={() => router.push("/")}>로그인</button>
+        </div>
+      )}
+      {emailLogin && <p>{loginEmail}님, 안녕하세요!</p>}
       <Fetch />
     </>
   );
