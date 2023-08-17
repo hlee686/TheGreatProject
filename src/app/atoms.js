@@ -23,3 +23,7 @@ export const idLikes = atom('')
 export const tutorial = atom(false)
 
 export const tutorialNum = atom(0)
+
+export const loginByEmail = atom('')
+
+export const loggedinViaEmail = atom(false)
