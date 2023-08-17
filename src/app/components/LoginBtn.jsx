@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {useEffect, useState} from "react"
 import "./LoginLayout.css"
-import Signup from './LoginByEmail';
+import LoginByEmail from '../../pages/LoginByEmail';
 
 export default function LoginBtn() {
 
