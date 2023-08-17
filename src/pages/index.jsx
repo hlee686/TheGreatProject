@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation'
 import { signIn, useSession, SessionProvider } from 'next-auth/react';
 import {Top} from "./Top"
 import "./mainPage.css"
-import io from 'socket.io-client';
+import Signup from '@/pages/Signup'
 
 
 export default function Home() {
@@ -30,13 +30,15 @@ export default function Home() {
     router.push("/Top")
   }
 
-
+  const signUp = () => {
+    router.push("/Signup")
+  }
   return (
     <div className="page-container">
     {/* {tutorialConfig && <button className="main-btn" onClick={route}>MAIN</button>} */}
     <LoginBtn />
     {loggedIn && <button className="top-thirty-btn" onClick={topThirty}>TUTORIAL</button>}
-    
+    {!loggedIn && <button onClick={signUp}>Sign Up</button>}
   </div>
 );
   }
