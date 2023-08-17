@@ -77,7 +77,7 @@ export default function LoginBtn() {
         <div><input type="password" placeholder="비밀번호입력" onChange={e=>setPassword(e.target.value)}></input></div>
         <button type="submit">로그인</button>
       </form> */}
-      {!logged && <button onClick={()=>router.push("/LoginByEmail")}>이메일 로그인</button>}
+      {logged && <button onClick={()=>router.push("/LoginByEmail")}>이메일 로그인</button>}
     </div>
   );
 }
