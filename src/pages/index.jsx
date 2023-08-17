@@ -35,6 +35,7 @@ export default function Home() {
   }
   return (
     <div className="page-container">
+      Hello
     {/* {tutorialConfig && <button className="main-btn" onClick={route}>MAIN</button>} */}
     <LoginBtn />
     {loggedIn && <button className="top-thirty-btn" onClick={topThirty}>TUTORIAL</button>}
