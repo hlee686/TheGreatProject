@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const Signup = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -36,14 +38,17 @@ const Signup = () => {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log("리스트", responseData);
+        if (responseData.message) {
+          router.push("/"); // Redirect to homepage
+        } else {
+          console.log("Signup failed. Response data:", responseData);
+        }
       } else {
         console.error('Error:', response.statusText);
       }
     } catch (error) {
       console.error('Fetch error:', error);
     }
-
     setFormData({
       email: '',
       password: '',
@@ -91,5 +96,6 @@ const Signup = () => {
     </div>
   )
 }
+
 
 export default Signup;

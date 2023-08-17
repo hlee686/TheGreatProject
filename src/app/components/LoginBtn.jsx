@@ -1,20 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { signIn, signOut, useSession } from 'next-auth/react';
+'use client'
+import { signIn, signOut, getSession, useSession} from 'next-auth/react';
 import { useAtom } from 'jotai';
 import { loggedInAtom, loggedId } from "../atoms"
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import {useEffect, useState} from "react"
 import "./LoginLayout.css"
+import Signup from './LoginByEmail';
 
 export default function LoginBtn() {
-  const [logged, setLogged] = useAtom(loggedInAtom);
-  const [email, setEmail] = useAtom(loggedId);
-  const [loginClicked, setLoginClicked] = useState(false);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+
+  const [logged, setLogged] = useAtom(loggedInAtom)
+  const [email, setEmail] = useAtom(loggedId)
+  const [loginClicked, setLoginClicked] = useState(false)
   const router = useRouter();
-  const session = useSession();
+  const session = useSession()
+  const [userEmail, setUserEmail] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleSignIn = async () => {
     try {
@@ -28,7 +30,8 @@ export default function LoginBtn() {
   useEffect(() => {
     if (session.data) {
       setEmail(session.data.user.email); 
-      setLogged(true);
+      console.log(email, "이메일")
+      setLogged(true)
     }
   }, [session.data]);
 
@@ -40,75 +43,41 @@ export default function LoginBtn() {
     }
   };
 
-  const pureLogin = async () => {
-    try {
-      const response = await fetch(`/api/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
-
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log("리스트", responseData);
-      } else {
-        console.error('Error:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Fetch error:', error);
-    }
-  }
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-  
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    pureLogin(); 
-  };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault()
+  //   try {
+  //     const res = await fetch(`/api/emailLogin`, {
+  //       method: "GET",
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       }
+  //     });
+  //     if (res.ok) {
+  //       const list = await res.json();
+  //       const loginList = await list.some(item=>(item.email==userEmail && item.password==password))
+  //       console.log("로그인은여기", loginList)
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //   }
+  // };
 
   return (
     <div className="login-container">
       {logged ? (
         <>
           <p className="status">로그인 됨</p>
-          <button className="logout-btn" onClick={handleSignOut}>LogOut</button>
+          <button className="logout-btn" onClick={handleSignOut}>로그아웃</button>
         </>
       ) : (
-        <>
-          <button className="login-btn" onClick={handleSignIn}>구글로그인</button>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="email"
-              placeholder="이메일"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="비밀번호"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-            <button type="submit">Login</button>
-          </form>
-        </>
+        <button className="login-btn" onClick={handleSignIn}>구글 로그인</button>
       )}
+      {/* <form onSubmit={handleSubmit}>
+        <div><input type="text" placeholder="email입력" onChange={e=>setUserEmail(e.target.value)}></input></div>
+        <div><input type="password" placeholder="비밀번호입력" onChange={e=>setPassword(e.target.value)}></input></div>
+        <button type="submit">로그인</button>
+      </form> */}
+      <button onClick={()=>router.push("/LoginByEmail")}>이메일 로그인</button>
     </div>
   );
 }
-
