@@ -38,7 +38,7 @@ export default function Home() {
     {/* {tutorialConfig && <button className="main-btn" onClick={route}>MAIN</button>} */}
     <LoginBtn />
     {loggedIn && <button className="top-thirty-btn" onClick={topThirty}>TUTORIAL</button>}
-    {!loggedIn && <button onClick={signUp}>Sign Up</button>}
+    <button onClick={signUp}>Sign Up</button>
   </div>
 );
   }
