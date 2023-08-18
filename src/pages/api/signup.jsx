@@ -1,4 +1,3 @@
-// pages/api/signup.js
 import { connectDB } from "../../../util/database";
 
 export default async function handler(req, res) {
@@ -8,12 +7,19 @@ export default async function handler(req, res) {
     try {
       const db = (await connectDB).db("TimeKiller");
 
-      await db.collection("users").insertOne({
-        email,
-        password,
-      });
+      // Check if email already exists in the collection
+      const existingUser = await db.collection("users").findOne({ email });
 
-      res.status(200).json({ message: 'Signup successful' });
+      if (existingUser) {
+        res.status(400).json({ message: 'Email already exists' });
+      } else {
+        await db.collection("users").insertOne({
+          email,
+          password,
+        });
+
+        res.status(200).json({ message: 'Signup successful' });
+      }
     } catch (error) {
       console.error('Signup error:', error);
       res.status(500).json({ message: 'Signup failed' });

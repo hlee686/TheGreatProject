@@ -39,7 +39,7 @@ const Signup = () => {
       if (response.ok) {
         const responseData = await response.json();
         if (responseData.message) {
-          router.push("/"); // Redirect to homepage
+          router.push("/");
         } else {
           console.log("Signup failed. Response data:", responseData);
         }
