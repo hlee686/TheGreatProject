@@ -18,14 +18,7 @@ export default function Ranking(){
         if (res.ok) {
           const list = await res.json();
           console.log('리스트', list)
-
-          let totalPoints = 0
-          const filteredList = list.filter(item => item.email === email);
-          filteredList.forEach(item => {
-            totalPoints += item.points;
-          });
-          await setPoint(totalPoints)
-          await setName(email)
+          await setName(name)
         }
       } catch (error) {
         console.error('Error fetching data:', error);
