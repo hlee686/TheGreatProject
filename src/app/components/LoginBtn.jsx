@@ -28,12 +28,18 @@ export default function LoginBtn() {
   };
 
   useEffect(() => {
-    if (session.data) {
-      setEmail(session.data.user.email); 
-      alert(email, "이메일")
-      setLogged(true)
+    async function fetchData() {
+      if (session.data) {
+        const userEmail = session.data.user.email;
+        await setEmail(userEmail);
+        alert(userEmail, "이메일");
+        setLogged(true);
+      }
     }
+  
+    fetchData();
   }, [session.data]);
+  
 
   const handleSignOut = async () => {
     try {
