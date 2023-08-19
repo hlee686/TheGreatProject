@@ -4,6 +4,7 @@ import { useAtom } from 'jotai';
 import { loggedInAtom, loginByEmail, loggedinViaEmail, loggedId } from '../app/atoms';
 import { useAtomValue } from 'jotai';
 import Fetch from '@/app/components/page';
+import Ranking from './ranking';
 
 export default function Main() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function Main() {
 
   return (
     <>
+    <Ranking />
       {emailLogin ? (
         <div>
           <p>로그인 상태 {loginEmail && <span>{email}</span>}</p>
