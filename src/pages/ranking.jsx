@@ -18,7 +18,6 @@ export default function Ranking(){
         if (res.ok) {
           const list = await res.json();
           console.log('리스트', list)
-          await setName(name)
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -26,6 +25,8 @@ export default function Ranking(){
     }
     pointsRank()
   },[])
+
+  console.log(loggedId)
   return (<div>
     <div>{name}</div>
     <div>{point}</div>
