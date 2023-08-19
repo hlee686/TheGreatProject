@@ -26,8 +26,8 @@ export default function Ranking(){
     pointsRank()
   },[])
 
-  console.log(loggedId)
   return (<div>
+    <p onClick={()=>console.log("아이디는", loggedId)}>아이디</p>
     <div>{name}</div>
     <div>{point}</div>
   </div>)
