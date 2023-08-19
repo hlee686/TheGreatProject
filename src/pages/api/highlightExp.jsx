@@ -8,6 +8,7 @@ export default async function handler(req, res) {
     _id: userIdVal,
     email: email,
     text: selectedText,
-    title: movieTitle
+    title: movieTitle,
+    points: 1
   });
 }

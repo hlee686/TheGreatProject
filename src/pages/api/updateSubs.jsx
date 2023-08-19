@@ -9,7 +9,8 @@ export default async function handler(req, res) {
   try {
     const filter = { _id: updateVal._id }; 
     const update = {
-      $set: { text: updateVal.text } 
+      $set: { text: updateVal.text } ,
+      $inc: { points: 2}
     };
 
     const result = await db.collection("post").updateOne(filter, update);

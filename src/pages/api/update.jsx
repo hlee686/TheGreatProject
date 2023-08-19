@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
     const filter = { _id: updateVal._id }; 
     const update = {
-      $set: { comment: `${updateVal.comment} / ${existingComment}` }
+      $set: { comment: `${updateVal.comment} / ${existingComment}` },
     };
 
     const result = await db.collection("post").updateOne(filter, update);
