@@ -103,11 +103,6 @@ export default function MovieByTitle() {
     }
   };
 
-  const debouncedSearchTitle = useMemo(
-    () => _.debounce(searchTitle, 200), 
-    []
-  );
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -128,7 +123,7 @@ export default function MovieByTitle() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <form onSubmit={debouncedSearchTitle}>
+      <form onSubmit={searchTitle}>
         <input type="text" name="title" placeholder="영화제목" />
         <button type="submit">Search</button>
       </form>
