@@ -143,7 +143,7 @@ const updateExp = async () => {
     console.log("Fetch completed:", response);
 
     if (response.ok) {
-      setEditSuccess(true)
+      await setEditSuccess(true)
       const responseBody = await response.json();
       
       if (responseBody.success) {
