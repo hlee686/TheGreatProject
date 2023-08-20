@@ -4,7 +4,7 @@ import { useAtom } from 'jotai';
 import { loggedInAtom, loginByEmail, loggedinViaEmail, loggedId } from '../app/atoms';
 import { useAtomValue } from 'jotai';
 import Fetch from '@/app/components/page';
-import Ranking from './ranking';
+import Ranking from '../app/components/ranking';
 
 export default function Main() {
   const router = useRouter();

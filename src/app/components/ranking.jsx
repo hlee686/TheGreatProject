@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react"
 import { useAtom } from "jotai"
-import { loggedId } from "@/app/atoms"
+import { loginByEmail } from "@/app/atoms"
 
 export default function Ranking(){
-  const [name, setName] = useAtom(loggedId)
+  const [name, setName] = useAtom(loginByEmail)
   const [point, setPoint] = useState(0)
 
   useEffect(()=>{
@@ -27,7 +27,6 @@ export default function Ranking(){
   },[])
 
   return (<div>
-    <p onClick={()=>console.log("아이디는", loggedId)}>아이디</p>
     <div>{name}</div>
     <div>{point}</div>
   </div>)

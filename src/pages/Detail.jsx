@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useAtom } from 'jotai';
-import { idAtom, loggedInAtom, loggedId, commentData, commentBool, userId } from '../app/atoms';
+import { idAtom, loggedInAtom, loggedId, commentData, commentBool, userId , loggedinViaEmail, loginByEmail} from '../app/atoms';
 import Comments from '@/app/components/Comments';
 import { signIn, signOut, getSession, useSession} from 'next-auth/react';
 import "./DetailPage.css"
@@ -42,6 +42,7 @@ export default function Detail() {
   const [idDataConfig, setIdDataConfig] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [byEmails, setByEmails] = useState([])
+  const [emailLogin, setEmailLogin] = useAtom(loginByEmail)
 
 
   const router = useRouter()
@@ -172,12 +173,26 @@ try {
       localStorage.setItem('highlight', selectedText);
       setHighlightedText(selectedText);
 
+      const requestBody = {
+        selectedText,
+        userIdVal,
+        movieTitle,
+      };
+      
+      if (!emailLogin && email) {
+        requestBody.email = email;
+        alert(email)
+      }
+      if(!email && emailLogin){
+        requestBody.emailLogin = emailLogin
+      }
+
         const response = await fetch('/api/highlightExp', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({selectedText, userIdVal, movieTitle, email}),
+          body: JSON.stringify(requestBody),
         })
 
       const range = window.getSelection().getRangeAt(0);
