@@ -73,7 +73,7 @@ useEffect(() => {
   
   return (
     <>
-    {prio.map((item, idx)=><p key={idx}>{item.email || item.emailLogin} / {item.points}</p>)}
+    {prio.map((item, idx)=><p style={{backgroundColor: "lightgreen", color: "black", border: "1px solid black"}} key={idx}>{item.email || item.emailLogin} / {item.points}</p>)}
     <Ranking />
       {emailLogin ? (
         <div>

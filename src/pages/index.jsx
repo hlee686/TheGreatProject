@@ -22,6 +22,7 @@ export default function Home() {
   const [loggedIn, setLoggedIn] = useAtom(loggedInAtom)
   const router = useRouter()
 
+
   // const route = () => {
   //   router.push("/Main")
   // }
@@ -37,6 +38,7 @@ export default function Home() {
 
   return (
     <div className="page-container">
+
     {/* {tutorialConfig && <button className="main-btn" onClick={route}>MAIN</button>} */}
     <LoginBtn />
     {loggedIn && <button className="top-thirty-btn" onClick={topThirty}>TUTORIAL</button>}
