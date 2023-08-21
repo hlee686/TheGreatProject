@@ -43,6 +43,7 @@ export default function Detail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [byEmails, setByEmails] = useState([])
   const [emailLogin, setEmailLogin] = useAtom(loginByEmail)
+  const [loggedinStatus, setLogginStatus] = useAtom(loggedinViaEmail)
 
 
   const router = useRouter()
@@ -338,7 +339,7 @@ try {
       <>
       <button onClick={fetchSubtitles}>자막보기</button>
       <button onClick={byMovie}>이 영화 모든표현</button>
-      {logged ? <><button onClick={seeHighlights}>나의 표현집</button></> : <><button disabled>나의 표현집</button></>}
+      {(logged || loggedinStatus) ? <><button onClick={seeHighlights}>나의 표현집</button></> : <><button disabled>나의 표현집</button></>}
       나의 표현집을 보려면 로그인 해주세요!
       <p onClick={highlight}>{subtitles}</p>
       {isModalOpen && (
