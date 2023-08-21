@@ -117,7 +117,7 @@ try {
     .split('\n')
     .filter((line) => line.trim() !== '')
     .join('\n');
-      setSubtitles(cleanedResult);
+      //setSubtitles(cleanedResult);
       setParagraph(cleanedResult)
     } catch (error) {
       console.log("자막이 없어요 아쉽게도")
@@ -359,11 +359,11 @@ try {
         </ul>
       </div>
 
-      <button onClick={fetchSubtitles}>자막보기</button>
+       <button onClick={fetchSubtitles}>자막보기</button> 
       <button onClick={byMovie}>이 영화 모든표현</button>
       {(logged || loggedinStatus) ? <><button onClick={seeHighlights}>나의 표현집</button></> : <><button disabled>나의 표현집</button></>}
       나의 표현집을 보려면 로그인 해주세요!
-      {/* <p onClick={highlight}>{subtitles}</p> */}
+       <p onClick={highlight}>{subtitles}</p> 
       {isModalOpen && (
   <div className="modal-overlay">
   <div className="modal">
