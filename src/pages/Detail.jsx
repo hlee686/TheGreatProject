@@ -334,7 +334,6 @@ try {
   };
 
   
-  
     return (
       <>
       <button onClick={fetchSubtitles}>자막보기</button>
@@ -405,7 +404,7 @@ try {
           ) : (
             <div style={{backgroundColor: "orange", width: "250px"}}>
               <p>{item.text}</p>
-              <div style={{color: "blue", fontStyle: 'italic'}} onClick={()=>byEmail(item.email)}>{item.email}<span style={{color: "black"}}>님의 표현</span></div>
+              <div style={{color: "blue", fontStyle: 'italic'}} onClick={()=>byEmail(item.email)}>{item.email || item.emailLogin}<span style={{color: "black"}}>님의 표현</span></div>
             </div>
           )}
         </div>

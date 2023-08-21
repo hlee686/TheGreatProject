@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 export default function Main() {
   const router = useRouter();
   const [emailLogin, setEmailLogin] = useAtom(loggedinViaEmail);
-  const loginEmail = useAtomValue(loginByEmail);
+  const [loginEmail, setLoginEmail] = useAtom(loginByEmail);
   const logged = useAtomValue(loggedInAtom);
   const email = useAtomValue(loggedId);
   const [prio, setPrio] = useState([])
@@ -73,7 +73,7 @@ useEffect(() => {
   
   return (
     <>
-    {prio.map((item, idx)=><p key={idx}>{item.email || item.emailLogin}</p>)}
+    {prio.map((item, idx)=><p key={idx}>{item.email || item.emailLogin} / {item.points}</p>)}
     <Ranking />
       {emailLogin ? (
         <div>
