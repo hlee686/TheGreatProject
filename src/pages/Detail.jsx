@@ -117,8 +117,8 @@ try {
     .split('\n')
     .filter((line) => line.trim() !== '')
     .join('\n');
-      //setSubtitles(cleanedResult);
-      setParagraph(cleanedResult)
+      await setSubtitles(cleanedResult);
+      await setParagraph(cleanedResult)
     } catch (error) {
       console.log("자막이 없어요 아쉽게도")
     }
@@ -337,6 +337,7 @@ try {
       console.error('Error fetching data:', error);
     }
   };
+
   
   const handleSplit = async () => {
     try {
@@ -345,100 +346,99 @@ try {
     } catch (error) {
       console.error('Error splitting paragraph:', error);
     }
-  };
-    return (
-      <>
-
+  }
+  
+  return (
+    <>
       <button onClick={handleSplit}>Split</button>
       <div>
         <h2>Sentences:</h2>
-        <ul>
+        <div style={{ overflowY: 'scroll', maxHeight: '300px' }}>
           {sentences.map((sentence, index) => (
-            <li onClick={highlight} key={index}>{sentence}</li>
+          <p onClick={highlight} key={index}>{sentence}</p>
+          ))}
+        </div>
+
+      </div>
+      <button onClick={fetchSubtitles}>자막보기</button>
+      <button onClick={byMovie}>이 영화 모든표현</button>
+      {(logged || loggedinStatus) ? (
+        <button onClick={seeHighlights}>나의 표현집</button>
+      ) : (
+        <button disabled>나의 표현집</button>
+      )}
+      나의 표현집을 보려면 로그인 해주세요!
+      <p onClick={highlight}>{subtitles}</p>
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <button className="close-button" onClick={closeModal}>
+              닫기
+            </button>
+            <ul>
+              <p style={{ color: "red" }}>대사를 클릭해서 응용해보세요!</p>
+              {highlightList.map((item) => (
+                <li key={item._id}>
+                  <div className="highlight-item" onClick={() => applyExp(item._id)}>
+                    {selectedItem === item._id ? (
+                      <div className="expanded-view">
+                        <input
+                          type="text"
+                          placeholder="응용"
+                          onClick={(e) => e.stopPropagation()}
+                          value={updateVal}
+                          onChange={(e) => {
+                            setUpdateVal(e.target.value);
+                          }}
+                        />
+                        <p>{item.text}</p>
+                        <div style={{ color: "blue", fontStyle: 'italic' }}>{item.title}</div>
+                        <button onClick={() => updateExp()}>응용하기</button>
+                      </div>
+                    ) : (
+                      <div className="collapsed-view">
+                        <p>{item.text}</p>
+                        <div style={{ color: "blue", fontStyle: 'italic' }}>{item.title}</div>
+                      </div>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+      {emailBool && idDataConfig && (
+        <ul>
+          {allExp.map((item) => (
+            <li key={item._id}>
+              <div onClick={() => applyExp(item._id)}>
+                {selectedItem === item._id && email === item.email ? (
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="응용"
+                      onClick={(e) => e.stopPropagation()}
+                      value={updateVal}
+                      onChange={(e) => {
+                        setUpdateVal(e.target.value);
+                      }}
+                    />
+                    <div style={{ color: "blue", fontStyle: 'italic' }}>{item.email}<span style={{ color: "black" }}>님의 표현</span></div>
+                    <button onClick={() => updateExp()}>응용하기</button>
+                  </div>
+                ) : (
+                  <div style={{ backgroundColor: "orange", width: "250px" }}>
+                    <p>{item.text}</p>
+                    <div style={{ color: "blue", fontStyle: 'italic' }} onClick={() => byEmail(item.email)}>{item.email || item.emailLogin}<span style={{ color: "black" }}>님의 표현</span></div>
+                  </div>
+                )}
+              </div>
+            </li>
           ))}
         </ul>
-      </div>
-
-       <button onClick={fetchSubtitles}>자막보기</button> 
-      <button onClick={byMovie}>이 영화 모든표현</button>
-      {(logged || loggedinStatus) ? <><button onClick={seeHighlights}>나의 표현집</button></> : <><button disabled>나의 표현집</button></>}
-      나의 표현집을 보려면 로그인 해주세요!
-       <p onClick={highlight}>{subtitles}</p> 
-      {isModalOpen && (
-  <div className="modal-overlay">
-  <div className="modal">
-    <button className="close-button" onClick={closeModal}>
-      닫기
-    </button>
-      <ul>
-      <p style={{color: "red"}}>대사를 클릭해서 응용해보세요!</p>
-        {highlightList.map((item) => (
-          <li key={item._id}>
-            <div className="highlight-item" onClick={() => applyExp(item._id)}>
-              {selectedItem === item._id ? (
-                <div className="expanded-view">
-                  <input
-                    type="text"
-                    placeholder="응용"
-                    onClick={(e) => e.stopPropagation()}
-                    value={updateVal}
-                    onChange={(e) => {
-                      setUpdateVal(e.target.value);
-                    }}
-                  />
-                  <p>{item.text}</p>
-                  <div style={{ color: "blue", fontStyle: 'italic' }}>{item.title}</div>
-                  <button onClick={() => updateExp()}>응용하기</button>
-                </div>
-              ) : (
-                <div className="collapsed-view">
-                  <p>{item.text}</p>
-                  <div style={{ color: "blue", fontStyle: 'italic' }}>{item.title}</div>
-                </div>
-              )}
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </div>
-)}
-
-
-{emailBool && idDataConfig && (
-  <ul>
-    {allExp.map((item) => (
-      <li key={item._id}>
-        <div onClick={() => applyExp(item._id)}>
-          {selectedItem === item._id && email === item.email ? (
-            <div>
-              <input
-                type="text"
-                placeholder="응용"
-                onClick={(e) => e.stopPropagation()}
-                value={updateVal}
-                onChange={(e) => {
-                  setUpdateVal(e.target.value);
-                }}
-              />
-              <div style={{color: "blue", fontStyle: 'italic'}}>{item.email}<span style={{color: "black"}}>님의 표현</span></div>
-              <button onClick={() => updateExp()}>응용하기</button>
-            </div>
-          ) : (
-            <div style={{backgroundColor: "orange", width: "250px"}}>
-              <p>{item.text}</p>
-              <div style={{color: "blue", fontStyle: 'italic'}} onClick={()=>byEmail(item.email)}>{item.email || item.emailLogin}<span style={{color: "black"}}>님의 표현</span></div>
-            </div>
-          )}
-        </div>
-      </li>
-    ))}
-  </ul>
-)}
-
-    
-
-{logged ? (
+      )}
+      {logged ? (
         <div className="user-info">
           <p>로그인 상태 {email}</p>
           <button onClick={handleSignOut}>로그아웃</button>
@@ -449,11 +449,8 @@ try {
           <button onClick={() => router.push('/')}>로그인</button>
         </div>
       )}
-
       <div className="video-info">
-
         <div className="video">
-    
           <iframe
             title="Movie Trailer"
             width="560"
@@ -462,7 +459,6 @@ try {
             frameBorder="0"
             allowFullScreen
           ></iframe>
-          
         </div>
         <div className="info">
           <h1>{idData.title}</h1>
@@ -473,4 +469,5 @@ try {
     </>
   );
       }
+  
     

@@ -5,6 +5,7 @@ import {useAtom} from 'jotai'
 import { v4 as uuidv4 } from 'uuid';
 import "./Top.css"
 import "./DetailPage.css"
+import { splitParagraphIntoSentences } from '../../util/openai'
 
 export default function Top() {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -25,6 +26,8 @@ export default function Top() {
   const [tutorialCnt, setTutorialCnt] = useState(0)
   const [highlighted, setHighlighted] = useState(false)
   const [editSuccess, setEditSuccess] = useState(false)
+  const [paragraph, setParagraph] = useState('');
+  const [sentences, setSentences] = useState([]);
 
 
   const router = useRouter();
@@ -65,7 +68,8 @@ try {
     .split('\n')
     .filter((line) => line.trim() !== '')
     .join('\n');
-      setSubtitles(cleanedResult);
+      await setSubtitles(cleanedResult);
+      await setParagraph(cleanedResult)
     } catch (error) {
       console.log("자막이 없어요 아쉽게도")
     }
@@ -213,8 +217,18 @@ useEffect(()=>{
   passTutorial()
 },[])
 
+const handleSplit = async () => {
+  try {
+    const result = await splitParagraphIntoSentences(paragraph);
+    setSentences(result);
+  } catch (error) {
+    console.error('Error splitting paragraph:', error);
+  }
+}
+
 return (
   <div>
+    <button onClick={handleSplit}>Split</button>
     <iframe
       width="560"
       height="315"
@@ -224,6 +238,15 @@ return (
       allow="autoplay; encrypted-media"
       allowFullScreen
     />
+    <div>
+        <h2>Sentences:</h2>
+        <div style={{ overflowY: 'scroll', maxHeight: '300px' }}>
+          {sentences.map((sentence, index) => (
+            <p onClick={highlight} key={index}>{sentence}</p>
+          ))}
+        </div>
+
+      </div>
 
     {/* {tutorialConfig && <button onClick={completeTutorial} className="tutorial-button">Tutorial 완료</button>} */}
     <h1>자막보기를 켜고, 무작위로 표현 3개만 하이라이트 해 보세요!</h1>
