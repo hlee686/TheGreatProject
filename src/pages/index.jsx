@@ -33,6 +33,8 @@ export default function Home() {
   const signUp = () => {
     router.push("/Signup")
   }
+
+
   return (
     <div className="page-container">
     {/* {tutorialConfig && <button className="main-btn" onClick={route}>MAIN</button>} */}
