@@ -33,7 +33,7 @@ export default function Top() {
   const router = useRouter();
   const { id } = useRouter().query;
 
-  const embedUrl = "https://www.youtube.com/embed/0Jg8AeuPFSc";
+  const embedUrl = "https://www.youtube.com/embed/b58gZlXm2yI";
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -43,7 +43,7 @@ export default function Top() {
 
 
   const fetchSubtitles = async () => {
-    const url = `https://subtitles-for-youtube.p.rapidapi.com/subtitles/0Jg8AeuPFSc.srt`;
+    const url = `https://subtitles-for-youtube.p.rapidapi.com/subtitles/b58gZlXm2yI.srt`;
 const options = {
 	method: 'GET',
 	headers: {
@@ -220,7 +220,7 @@ useEffect(()=>{
 const handleSplit = async () => {
   try {
     const result = await splitParagraphIntoSentences(paragraph);
-    setSentences(result);
+    await setSentences(result);
   } catch (error) {
     console.error('Error splitting paragraph:', error);
   }

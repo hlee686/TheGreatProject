@@ -117,8 +117,8 @@ try {
     .split('\n')
     .filter((line) => line.trim() !== '')
     .join('\n');
-      await setSubtitles(cleanedResult);
-      await setParagraph(cleanedResult)
+      setSubtitles(cleanedResult);
+      setParagraph(cleanedResult)
     } catch (error) {
       console.log("자막이 없어요 아쉽게도")
     }
@@ -347,10 +347,14 @@ try {
       console.error('Error splitting paragraph:', error);
     }
   }
+  const handleGoBack = () => {
+    router.push("/Main")
+  }
   
   return (
     <>
       <button onClick={handleSplit}>Split</button>
+      <button onClick={handleGoBack}>홈</button>
       <div>
         <h2>Sentences:</h2>
         <div style={{ overflowY: 'scroll', maxHeight: '300px' }}>
