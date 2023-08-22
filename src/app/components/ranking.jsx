@@ -6,8 +6,8 @@ export default function Ranking(){
   const name = useAtomValue(loginByEmail)
   const [point, setPoint] = useState(0)
 
-
-  const myScore = async() => {
+useEffect(()=>{
+  async function formData() {
     try {
       const res = await fetch(`/api/myEmailList`, {
         method: "GET",
@@ -22,17 +22,24 @@ export default function Ranking(){
         console.log(filtered)
         const totalPoints = filtered.reduce((total, item) => total + item.points, 0);
         console.log('총 포인트:', totalPoints);
-        setPoint(totalPoints)
+        localStorage.setItem("total", totalPoints)
       }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   }
+  formData()
+},[name])
 
+useEffect(()=>{
+  async function total(){
+    await setPoint(localStorage.getItem("total"))
+  }
+  total()
+},[])
 
   return (<div>
-    <button onClick={myScore}>나의점수</button>
-    <div>{name.split("@")[0]}</div>
-    <div>{point}</div>
+    <div>나의 이름: {name.split("@")[0]}</div>
+    <div>나의 포인트: {point}</div>
   </div>)
 }

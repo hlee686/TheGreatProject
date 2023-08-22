@@ -124,7 +124,7 @@ export default function Main() {
           <button onClick={() => router.push("/")}>로그인</button>
         </div>
       )}
-      {emailLogin && <p>{loginEmail}님, 안녕하세요!</p>}
+      <p>{loginEmail}님, 안녕하세요!</p>
       <Fetch />
     </>
   );
