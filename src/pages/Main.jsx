@@ -1,7 +1,7 @@
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useAtom } from 'jotai';
-import { loggedInAtom, loginByEmail, loggedinViaEmail, loggedId } from '../app/atoms';
+import { loggedInAtom, loginByEmail, loggedinViaEmail, loggedId, myPoint } from '../app/atoms';
 import { useAtomValue } from 'jotai';
 import Fetch from '@/app/components/page';
 import Ranking from '../app/components/ranking';
@@ -14,6 +14,7 @@ export default function Main() {
   const logged = useAtomValue(loggedInAtom);
   const [email, setEmail] = useAtom(loggedId);
   const [prio, setPrio] = useState([]);
+  const [point, setPoint] = useAtom(myPoint)
 
   useEffect(() => {
     async function rank() {
@@ -94,6 +95,13 @@ export default function Main() {
     setLoginEmail(localStorage.getItem("id"))
   },[])
   
+  const logOut = () => {
+    signOut()
+    localStorage.removeItem("id")
+    localStorage.removeItem("total")
+    // setLoginEmail(localStorage.getItem("id"))
+    // setPoint(localStorage.getItem("total"))
+  }
 
   return (
     <>
@@ -116,7 +124,7 @@ export default function Main() {
           <p>
             로그인 상태 <span>{loginEmail}</span>
           </p>
-          <button onClick={() => signOut()}>로그아웃</button>
+          <button onClick={() => logOut()}>로그아웃</button>
         </div>
       ) : (
         <div>

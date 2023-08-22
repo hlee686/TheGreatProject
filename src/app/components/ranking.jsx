@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react"
 import { useAtom, useAtomValue } from "jotai"
-import { loginByEmail } from "@/app/atoms"
+import { loginByEmail, myPoint } from "@/app/atoms"
 
 export default function Ranking(){
   const name = useAtomValue(loginByEmail)
-  const [point, setPoint] = useState(0)
+  const [point, setPoint] = useAtom(myPoint)
 
 useEffect(()=>{
   async function formData() {
@@ -39,7 +39,7 @@ useEffect(()=>{
 },[])
 
   return (<div>
-    <div>나의 이름: {name.split("@")[0]}</div>
+    <div>나의 이름: {name}</div>
     <div>나의 포인트: {point}</div>
   </div>)
 }
