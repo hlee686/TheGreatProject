@@ -16,7 +16,6 @@ export default function Main() {
   const [prio, setPrio] = useState([]);
   const [point, setPoint] = useAtom(myPoint)
 
-
   const { data: session, status } = useSession();
 
   const [initialEmail, setInitialEmail] = useState('');
@@ -85,7 +84,7 @@ const totalList = uniqueEmails.map((email) => ({
 totalList.sort((a, b) => b.points - a.points);
 
 
-const uniquePrio = totalList.slice(0, 5);
+const uniquePrio = totalList;
 
 setPrio(uniquePrio);
 
@@ -140,7 +139,7 @@ setPrio(uniquePrio);
 
   return (
     <>
-      {prio.map((item, idx) => (
+      {prio.slice(0,5).map((item, idx) => (
         (item.email || item.emailLogin) &&
         <><p
           style={{
@@ -154,7 +153,7 @@ setPrio(uniquePrio);
           {item.points}점
         </p></>
       ))}
-      {loginEmail && setPoint(prio.filter(item=>item.email==loginEmail)[0]?.points)}
+      {setPoint(prio.filter(item=>item.email==loginEmail)[0]?.points)}
       <Ranking />
       {loginEmail ? (
         <div>
