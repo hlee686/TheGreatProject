@@ -32,9 +32,12 @@ export default function LoginBtn() {
       if (session.data) {
         const userEmail = session.data.user.email;
         setEmail(userEmail);
-        alert(userEmail, "이메일");
         setLogged(true);
-        router.push("/Main")
+        if(logged){
+          router.push("/Main")
+        }else{
+          router.push("/")
+        }
       }
     }
   

@@ -14,7 +14,7 @@ export default function Main() {
   const [point, setPoint] = useAtom(myPoint)
   const email = useAtomValue(loggedId); // 값을 읽어오기 위해 useAtomValue 사용
 
-  const updateEmailAtom = useAtomValue(loggedId); // 아톰 업데이트를 위한 함수
+  const [loggedState, setLoggedState] = useAtom(loggedInAtom)// 아톰 업데이트를 위한 함수
 
   const { data: session, status } = useSession();
 
@@ -45,36 +45,33 @@ export default function Main() {
     (item.emailLogin !== null && item.emailLogin !== "")
   )
 );
+const uniqueEmails = Array.from(new Set(filteredList.map((item) => item.email || item.emailLogin)));
 
-          const emailPointsMap = {};
+const emailPointsMap = {};
 
-          filteredList.forEach((item) => {
-            if (item.email !== null) {
-              if (emailPointsMap[item.email]) {
-                emailPointsMap[item.email] += item.points;
-              } else {
-                emailPointsMap[item.email] = item.points;
-              }
-            }
+filteredList.forEach((item) => {
+  const email = item.email || item.emailLogin;
+  if (email !== null) {
+    if (emailPointsMap[email]) {
+      emailPointsMap[email] += item.points;
+    } else {
+      emailPointsMap[email] = item.points;
+    }
+  }
+});
 
-            if (item.emailLogin !== null) {
-              if (emailPointsMap[item.emailLogin]) {
-                emailPointsMap[item.emailLogin] += item.points;
-              } else {
-                emailPointsMap[item.emailLogin] = item.points;
-              }
-            }
-          });
+const totalList = uniqueEmails.map((email) => ({
+  email,
+  points: emailPointsMap[email] || 0, 
+}));
 
-          const totalList = Object.keys(emailPointsMap)
-            .filter((email) => email !== "undefined")
-            .map((email) => ({
-              email,
-              points: emailPointsMap[email],
-            }));
 
-          totalList.sort((a, b) => b.points - a.points);
-          setPrio(totalList.splice(0, 5));
+totalList.sort((a, b) => b.points - a.points);
+
+
+const uniquePrio = totalList.slice(0, 5);
+
+setPrio(uniquePrio);
 
           console.log(totalList);
         }
@@ -120,6 +117,7 @@ export default function Main() {
   const logOut = () => {
     signOut()
     localStorage.removeItem("id")
+    setLoggedState(false)
     //localStorage.removeItem("total")
     // setLoginEmail(localStorage.getItem("id"))
     // setPoint(localStorage.getItem("total"))
@@ -137,12 +135,12 @@ export default function Main() {
           }}
           key={idx}
         >
-          {idx}위: {(item.email || item.emailLogin)}님 /{" "}
+          {idx+1}위: {(item.email || item.emailLogin)}님 /{" "}
           {item.points}점
         </p>
       ))}
       <Ranking />
-      {emailLogin ? (
+      {(loggedState || loginEmail) ? (
         <div>
           <p>
             로그인 상태 <span>{email}</span>
@@ -155,7 +153,7 @@ export default function Main() {
           <button onClick={() => router.push("/")}>로그인</button>
         </div>
       )}
-      <p>{email}님, 안녕하세요!</p>
+      <p>{email || emailLogin}님, 안녕하세요!</p>
       <Fetch />
     </>
   );
