@@ -1,12 +1,12 @@
 'use client'
 import { signIn, signOut, getSession, useSession} from 'next-auth/react';
 import { useAtom } from 'jotai';
-import { loggedInAtom, loggedId } from "../atoms"
+import { loggedInAtom, loggedId } from "../app/atoms"
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {useEffect, useState} from "react"
 import "./LoginLayout.css"
-import LoginByEmail from '../../pages/LoginByEmail';
+import LoginByEmail from './LoginByEmail';
 
 export default function LoginBtn() {
 

@@ -317,7 +317,7 @@ try {
 
   const byEmail =async(email) =>{
     try {
-      const res = await fetch(`/api/seeHighlights?email=${email}`, {
+      const res = await fetch(`/api/seeHighlights?email=${emailLogin}`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',

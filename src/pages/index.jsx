@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Fetch from '@/app/components/page'
 import axios from "axios"
 import Main from "./Main"
-import LoginBtn from '../app/components/LoginBtn'
+import LoginBtn from './LoginBtn'
 import { Provider, useAtom } from 'jotai';
 import { loggedId, loggedInAtom, tutorial, tutorialNum } from '@/app/atoms'
 import { useEffect, useState } from 'react'
