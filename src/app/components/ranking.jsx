@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react"
 import { useAtom, useAtomValue } from "jotai"
-import { loginByEmail, myPoint, loggedId } from "@/app/atoms"
+import { loginByEmail, myPoint, loggedId, loggedinViaEmail } from "@/app/atoms"
 
 export default function Ranking(){
   const [name, setName] = useAtom(loginByEmail)
-  const [point, setPoint] = useAtom(myPoint)
+  const [points, setPoints] = useAtom(myPoint)
   const [email, setEmail] = useAtom(loggedId)
+  const [logged, setLogged] = useAtom(loggedinViaEmail)
 
 useEffect(()=>{
   async function formData() {
@@ -34,13 +35,12 @@ useEffect(()=>{
 
 useEffect(()=>{
   async function total(){
-    await setPoint(localStorage.getItem("total"))
+    await setPoints(localStorage.getItem("total"))
   }
   total()
 },[])
 
   return (<div>
-    <div>나의 이름: {name || email}</div>
-    <div>나의 포인트: {point}</div>
+    <div>나의 포인트: {logged && points}</div>
   </div>)
 }

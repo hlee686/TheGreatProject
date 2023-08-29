@@ -1,31 +1,44 @@
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { useAtom, useUpdateAtom, useAtomValue } from 'jotai'; // useUpdateAtom 추가
+import { useAtom } from 'jotai';
 import { loggedInAtom, loginByEmail, loggedinViaEmail, loggedId, myPoint } from '../app/atoms';
+import { useAtomValue } from 'jotai';
 import Fetch from '@/app/components/page';
 import Ranking from '../app/components/ranking';
+import { useEffect, useState } from 'react';
 
 export default function Main() {
   const router = useRouter();
   const [emailLogin, setEmailLogin] = useAtom(loggedinViaEmail);
   const [loginEmail, setLoginEmail] = useAtom(loginByEmail);
+  const logged = useAtomValue(loggedInAtom);
+  const [email, setEmail] = useAtom(loggedId);
   const [prio, setPrio] = useState([]);
   const [point, setPoint] = useAtom(myPoint)
-  const email = useAtomValue(loggedId); // 값을 읽어오기 위해 useAtomValue 사용
 
-  const [loggedState, setLoggedState] = useAtom(loggedInAtom)// 아톰 업데이트를 위한 함수
 
   const { data: session, status } = useSession();
 
-  console.log(email)
+  const [initialEmail, setInitialEmail] = useState('');
 
   useEffect(() => {
     const savedEmailLogin = localStorage.getItem('id');
     if (savedEmailLogin) {
       setEmailLogin(savedEmailLogin);
+      setInitialEmail(savedEmailLogin); 
     }
   }, [session]);
+
+  useEffect(() => {
+    if (loginEmail !== initialEmail) {
+      if (loginEmail) {
+        localStorage.setItem('id', loginEmail);
+      } else {
+        localStorage.removeItem('id');
+      }
+    }
+  }, [loginEmail, initialEmail]);
+  
 
   useEffect(() => {
     async function rank() {
@@ -45,8 +58,10 @@ export default function Main() {
     (item.emailLogin !== null && item.emailLogin !== "")
   )
 );
+
 const uniqueEmails = Array.from(new Set(filteredList.map((item) => item.email || item.emailLogin)));
 
+// 각 이메일 주소의 합산 점수를 계산
 const emailPointsMap = {};
 
 filteredList.forEach((item) => {
@@ -60,6 +75,7 @@ filteredList.forEach((item) => {
   }
 });
 
+// 이메일 주소와 합산 점수를 배열로 변환
 const totalList = uniqueEmails.map((email) => ({
   email,
   points: emailPointsMap[email] || 0, 
@@ -93,15 +109,14 @@ setPrio(uniquePrio);
         });
         if (res.ok) {
           const list = await res.json();
-          localStorage.setItem("id", list[0].email);
-          updateEmailAtom(list[0].email); // 아톰 업데이트
+          localStorage.setItem("id", list[0].email)
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     }
     loginMain();
-  }, []); 
+  }, [loginEmail]); 
   
   useEffect(()=>{
     setLoginEmail(localStorage.getItem("id"))
@@ -117,7 +132,7 @@ setPrio(uniquePrio);
   const logOut = () => {
     signOut()
     localStorage.removeItem("id")
-    setLoggedState(false)
+    setEmailLogin(false)
     //localStorage.removeItem("total")
     // setLoginEmail(localStorage.getItem("id"))
     // setPoint(localStorage.getItem("total"))
@@ -135,15 +150,15 @@ setPrio(uniquePrio);
           }}
           key={idx}
         >
-          {idx+1}위: {(item.email || item.emailLogin)}님 /{" "}
+          {idx + 1}위: {(item.email || item.emailLogin)}님 /{" "}
           {item.points}점
         </p>
       ))}
       <Ranking />
-      {(loggedState || loginEmail) ? (
+      {loginEmail ? (
         <div>
           <p>
-            로그인 상태 <span>{email}</span>
+            로그인 상태 <span>{loginEmail}</span>
           </p>
           <button onClick={() => logOut()}>로그아웃</button>
         </div>
@@ -153,7 +168,8 @@ setPrio(uniquePrio);
           <button onClick={() => router.push("/")}>로그인</button>
         </div>
       )}
-      <p>{email || emailLogin}님, 안녕하세요!</p>
+      <p>{loginEmail}님, 안녕하세요!</p>
+      
       <Fetch />
     </>
   );
