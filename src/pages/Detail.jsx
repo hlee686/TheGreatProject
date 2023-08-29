@@ -333,24 +333,6 @@ try {
     }
   };
 
-  const byGoogle =async(email) =>{
-    try {
-      const res = await fetch(`/api/seeHighlights?email=${emailLogin}`, {
-        method: "GET",
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-      if (res.ok) {
-        const list = await res.json();
-        console.log('Response data:', list)
-        await setByEmails(list)
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
   
   const handleSplit = async () => {
     try {
@@ -382,7 +364,7 @@ try {
       {(logged || loggedinStatus) ? (
         <button onClick={seeHighlights}>나의 표현집</button>
       ) : (
-        <button onClick={byGoogle}>나의 표현집</button>
+        <button onClick={byEmail}>나의 표현집</button>
       )}
       나의 표현집을 보려면 로그인 해주세요!
       <p onClick={highlight}>{subtitles}</p>
