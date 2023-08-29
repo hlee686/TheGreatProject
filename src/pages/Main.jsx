@@ -1,4 +1,4 @@
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useAtom } from 'jotai';
 import { loggedInAtom, loginByEmail, loggedinViaEmail, loggedId, myPoint } from '../app/atoms';
@@ -16,6 +16,14 @@ export default function Main() {
   const [prio, setPrio] = useState([]);
   const [point, setPoint] = useAtom(myPoint)
 
+  const { data: session, status } = useSession();
+  useEffect(() => {
+    const savedEmailLogin = localStorage.getItem('id');
+    if (savedEmailLogin) {
+      setEmailLogin(savedEmailLogin);
+    }
+  }, [session]);
+
   useEffect(() => {
     async function rank() {
       try {
@@ -28,9 +36,12 @@ export default function Main() {
         if (res.ok) {
           const list = await res.json();
 
-          const filteredList = list.filter(
-            (item) => item.email !== null || item.emailLogin !== null
-          );
+         const filteredList = list.filter(
+  (item) => (
+    (item.email !== null && item.email !== "") || 
+    (item.emailLogin !== null && item.emailLogin !== "")
+  )
+);
 
           const emailPointsMap = {};
 
@@ -94,11 +105,18 @@ export default function Main() {
   useEffect(()=>{
     setLoginEmail(localStorage.getItem("id"))
   },[])
+  useEffect(() => {
+    if (emailLogin) {
+      localStorage.setItem('id', emailLogin);
+    } else {
+      localStorage.removeItem('id');
+    }
+  }, [emailLogin]);
   
   const logOut = () => {
     signOut()
     localStorage.removeItem("id")
-    localStorage.removeItem("total")
+    //localStorage.removeItem("total")
     // setLoginEmail(localStorage.getItem("id"))
     // setPoint(localStorage.getItem("total"))
   }
@@ -106,6 +124,7 @@ export default function Main() {
   return (
     <>
       {prio.map((item, idx) => (
+        (item.email || item.emailLogin) &&
         <p
           style={{
             backgroundColor: "lightgreen",
@@ -114,8 +133,8 @@ export default function Main() {
           }}
           key={idx}
         >
-          {idx + 1}위: {(item.email || item.emailLogin).split("@")[0]} /{" "}
-          {item.points}
+          {idx + 1}위: {(item.email || item.emailLogin)}님 /{" "}
+          {item.points}점
         </p>
       ))}
       <Ranking />

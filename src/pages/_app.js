@@ -1,13 +1,12 @@
-import { Provider } from 'jotai';
-import { SessionProvider, useSession } from 'next-auth/react';
+// pages/_app.js
+import { SessionProvider } from 'next-auth/react'
 
 function MyApp({ Component, pageProps }) {
-
   return (
-    <SessionProvider>
+    <SessionProvider session={pageProps.session}>
       <Component {...pageProps} />
     </SessionProvider>
-  );
+  )
 }
 
-export default MyApp;
+export default MyApp

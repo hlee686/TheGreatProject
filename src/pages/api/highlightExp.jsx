@@ -10,6 +10,6 @@ export default async function handler(req, res) {
     emailLogin: emailLogin,
     text: selectedText,
     title: movieTitle,
-    points: 1
+    points: -1
   });
 }

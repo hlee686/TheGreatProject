@@ -3,7 +3,7 @@ import { useAtom, useAtomValue } from "jotai"
 import { loginByEmail, myPoint } from "@/app/atoms"
 
 export default function Ranking(){
-  const name = useAtomValue(loginByEmail)
+  const [name, setName] = useAtom(loginByEmail)
   const [point, setPoint] = useAtom(myPoint)
 
 useEffect(()=>{
@@ -17,11 +17,9 @@ useEffect(()=>{
       });
       if (res.ok) {
         const list = await res.json();
-        console.log('리스트', list)
         const filtered = await list.filter(item=>item.emailLogin==name)
-        console.log(filtered)
+        await setName(filtered[0].emailLogin)
         const totalPoints = filtered.reduce((total, item) => total + item.points, 0);
-        console.log('총 포인트:', totalPoints);
         localStorage.setItem("total", totalPoints)
       }
     } catch (error) {

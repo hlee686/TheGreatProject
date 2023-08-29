@@ -46,7 +46,7 @@ export default function Detail() {
   const [emailLogin, setEmailLogin] = useAtom(loginByEmail)
   const [loggedinStatus, setLogginStatus] = useAtom(loggedinViaEmail)
   const [paragraph, setParagraph] = useState('');
-  const [sentences, setSentences] = useState([]);
+  const [sentences, setSentences] = useState([])
 
 
   const router = useRouter()
@@ -182,15 +182,10 @@ try {
         selectedText,
         userIdVal,
         movieTitle,
+        email,
+        emailLogin
       };
       
-      if (!emailLogin && email) {
-        requestBody.email = email;
-        alert(email)
-      }
-      if(!email && emailLogin){
-        requestBody.emailLogin = emailLogin
-      }
 
         const response = await fetch('/api/highlightExp', {
           method: 'POST',
@@ -369,7 +364,7 @@ try {
       {(logged || loggedinStatus) ? (
         <button onClick={seeHighlights}>나의 표현집</button>
       ) : (
-        <button disabled>나의 표현집</button>
+        <button onClick={seeHighlights}>나의 표현집</button>
       )}
       나의 표현집을 보려면 로그인 해주세요!
       <p onClick={highlight}>{subtitles}</p>
