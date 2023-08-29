@@ -142,7 +142,7 @@ setPrio(uniquePrio);
     <>
       {prio.map((item, idx) => (
         (item.email || item.emailLogin) &&
-        <p
+        <><p
           style={{
             backgroundColor: "lightgreen",
             color: "black",
@@ -152,8 +152,9 @@ setPrio(uniquePrio);
         >
           {idx + 1}위: {(item.email || item.emailLogin)}님 /{" "}
           {item.points}점
-        </p>
+        </p></>
       ))}
+      {loginEmail && setPoint(prio.filter(item=>item.email==loginEmail)[0]?.points)}
       <Ranking />
       {loginEmail ? (
         <div>
