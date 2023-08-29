@@ -1,22 +1,25 @@
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useAtom } from 'jotai';
+import { useEffect, useState } from 'react';
+import { useAtom, useUpdateAtom, useAtomValue } from 'jotai'; // useUpdateAtom 추가
 import { loggedInAtom, loginByEmail, loggedinViaEmail, loggedId, myPoint } from '../app/atoms';
-import { useAtomValue } from 'jotai';
 import Fetch from '@/app/components/page';
 import Ranking from '../app/components/ranking';
-import { useEffect, useState } from 'react';
 
 export default function Main() {
   const router = useRouter();
   const [emailLogin, setEmailLogin] = useAtom(loggedinViaEmail);
   const [loginEmail, setLoginEmail] = useAtom(loginByEmail);
-  const logged = useAtomValue(loggedInAtom);
-  const [email, setEmail] = useAtom(loggedId);
   const [prio, setPrio] = useState([]);
   const [point, setPoint] = useAtom(myPoint)
+  const email = useAtomValue(loggedId); // 값을 읽어오기 위해 useAtomValue 사용
+
+  const updateEmailAtom = useAtomValue(loggedId); // 아톰 업데이트를 위한 함수
 
   const { data: session, status } = useSession();
+
+  console.log(email)
+
   useEffect(() => {
     const savedEmailLogin = localStorage.getItem('id');
     if (savedEmailLogin) {
@@ -93,7 +96,8 @@ export default function Main() {
         });
         if (res.ok) {
           const list = await res.json();
-          localStorage.setItem("id", list[0].email)
+          localStorage.setItem("id", list[0].email);
+          updateEmailAtom(list[0].email); // 아톰 업데이트
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -133,7 +137,7 @@ export default function Main() {
           }}
           key={idx}
         >
-          {idx + 1}위: {(item.email || item.emailLogin)}님 /{" "}
+          {idx}위: {(item.email || item.emailLogin)}님 /{" "}
           {item.points}점
         </p>
       ))}
@@ -141,7 +145,7 @@ export default function Main() {
       {emailLogin ? (
         <div>
           <p>
-            로그인 상태 <span>{loginEmail}</span>
+            로그인 상태 <span>{email}</span>
           </p>
           <button onClick={() => logOut()}>로그아웃</button>
         </div>
@@ -151,7 +155,7 @@ export default function Main() {
           <button onClick={() => router.push("/")}>로그인</button>
         </div>
       )}
-      <p>{loginEmail}님, 안녕하세요!</p>
+      <p>{email}님, 안녕하세요!</p>
       <Fetch />
     </>
   );

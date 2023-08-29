@@ -34,6 +34,7 @@ export default function LoginBtn() {
         setEmail(userEmail);
         alert(userEmail, "이메일");
         setLogged(true);
+        router.push("/Main")
       }
     }
   
