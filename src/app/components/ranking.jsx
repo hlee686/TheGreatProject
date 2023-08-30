@@ -41,6 +41,6 @@ useEffect(()=>{
 },[])
 
   return (<div>
-    <div>나의 포인트: {logged && points}</div>
+    <div>나의 포인트: {logged && points+20}</div>
   </div>)
 }

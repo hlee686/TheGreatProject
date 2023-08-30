@@ -14,29 +14,46 @@ export default function Main() {
   const logged = useAtomValue(loggedInAtom);
   const [email, setEmail] = useAtom(loggedId);
   const [prio, setPrio] = useState([]);
-  const [point, setPoint] = useAtom(myPoint)
+  const [point, setPoint] = useAtom(myPoint);
 
   const { data: session, status } = useSession();
 
   const [initialEmail, setInitialEmail] = useState('');
+  const [initialGoogle, setInitialGoogle] = useState('');
 
   useEffect(() => {
     const savedEmailLogin = localStorage.getItem('id');
     if (savedEmailLogin) {
-      setEmailLogin(savedEmailLogin);
-      setInitialEmail(savedEmailLogin); 
+      setEmailLogin(true); 
+      setInitialEmail(savedEmailLogin);
     }
-  }, [session]);
+  }, []);
 
   useEffect(() => {
-    if (loginEmail !== initialEmail) {
-      if (loginEmail) {
-        localStorage.setItem('id', loginEmail);
+    const savedLogin = localStorage.getItem('email');
+    if (savedLogin) {
+      setEmail(true);
+      setInitialGoogle(savedLogin); 
+    }
+  }, []);
+
+  useEffect(() => {
+    // 로그인 상태가 변경될 때 로컬 스토리지에 이메일을 설정
+    if (loginEmail) {
+      localStorage.setItem('id', loginEmail);
+      setLoginEmail(loginEmail);
+    } else if (email) {
+      localStorage.setItem('email', email);
+      setEmail(email);
+    } else {
+      const savedEmail = localStorage.getItem('email');
+      if (savedEmail) {
+        setEmail(savedEmail);
       } else {
         localStorage.removeItem('id');
       }
     }
-  }, [loginEmail, initialEmail]);
+  }, [loginEmail, email]);
   
 
   useEffect(() => {
@@ -51,43 +68,40 @@ export default function Main() {
         if (res.ok) {
           const list = await res.json();
 
-         const filteredList = list.filter(
-  (item) => (
-    (item.email !== null && item.email !== "") || 
-    (item.emailLogin !== null && item.emailLogin !== "")
-  )
-);
+          const filteredList = list.filter(
+            (item) => (
+              (item.email !== null && item.email !== "") || 
+              (item.emailLogin !== null && item.emailLogin !== "")
+            )
+          );
 
-const uniqueEmails = Array.from(new Set(filteredList.map((item) => item.email || item.emailLogin)));
+          const uniqueEmails = Array.from(new Set(filteredList.map((item) => item.email || item.emailLogin)));
 
-// 각 이메일 주소의 합산 점수를 계산
-const emailPointsMap = {};
+          // 각 이메일 주소의 합산 점수를 계산
+          const emailPointsMap = {};
 
-filteredList.forEach((item) => {
-  const email = item.email || item.emailLogin;
-  if (email !== null) {
-    if (emailPointsMap[email]) {
-      emailPointsMap[email] += item.points;
-    } else {
-      emailPointsMap[email] = item.points;
-    }
-  }
-});
+          filteredList.forEach((item) => {
+            const email = item.email || item.emailLogin;
+            if (email !== null) {
+              if (emailPointsMap[email]) {
+                emailPointsMap[email] += item.points;
+              } else {
+                emailPointsMap[email] = item.points;
+              }
+            }
+          });
 
-// 이메일 주소와 합산 점수를 배열로 변환
-const totalList = uniqueEmails.map((email) => ({
-  email,
-  points: emailPointsMap[email] || 0, 
-}));
+          // 이메일 주소와 합산 점수를 배열로 변환
+          const totalList = uniqueEmails.map((email) => ({
+            email,
+            points: emailPointsMap[email] || 0, 
+          }));
 
+          totalList.sort((a, b) => b.points - a.points);
 
-totalList.sort((a, b) => b.points - a.points);
+          const uniquePrio = totalList;
 
-
-const uniquePrio = totalList;
-
-setPrio(uniquePrio);
-
+          setPrio(uniquePrio);
           console.log(totalList);
         }
       } catch (error) {
@@ -96,7 +110,7 @@ setPrio(uniquePrio);
     }
     rank();
   }, []);
- 
+
   useEffect(() => {
     async function loginMain() {
       try {
@@ -108,7 +122,9 @@ setPrio(uniquePrio);
         });
         if (res.ok) {
           const list = await res.json();
-          localStorage.setItem("id", list[0].email)
+          const userEmail = list[0].email;
+          localStorage.setItem("id", userEmail);
+          setLoginEmail(true); 
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -116,25 +132,35 @@ setPrio(uniquePrio);
     }
     loginMain();
   }, [loginEmail]); 
-  
-  useEffect(()=>{
-    setLoginEmail(localStorage.getItem("id"))
-  },[])
+
   useEffect(() => {
-    if (emailLogin) {
-      localStorage.setItem('id', emailLogin);
-    } else {
-      localStorage.removeItem('id');
+    async function emailMain() {
+      try {
+        const res = await fetch(`/api/emailMain?loginEmail=${email}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (res.ok) {
+          const list = await res.json();
+          const userEmail = list[0].email;
+          localStorage.setItem("email", userEmail);
+          setEmail(true); 
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     }
-  }, [emailLogin]);
+    emailMain();
+  }, [email]); 
   
   const logOut = () => {
-    signOut()
-    localStorage.removeItem("id")
-    setEmailLogin(false)
-    //localStorage.removeItem("total")
-    // setLoginEmail(localStorage.getItem("id"))
-    // setPoint(localStorage.getItem("total"))
+    signOut();
+    localStorage.removeItem("id");
+    localStorage.removeItem("email")
+    setEmailLogin(false); 
+    setEmail(''); 
   }
 
   return (
@@ -150,15 +176,15 @@ setPrio(uniquePrio);
           key={idx}
         >
           {idx + 1}위: {(item.email || item.emailLogin)}님 /{" "}
-          {item.points}점
+          {item.points+20}점
         </p></>
       ))}
       {setPoint(prio.filter(item=>item.email==loginEmail)[0]?.points)}
       <Ranking />
-      {loginEmail ? (
+      {(loginEmail || email) ? (
         <div>
           <p>
-            로그인 상태 <span>{loginEmail}</span>
+            로그인 상태 <span>{loginEmail || email}</span>
           </p>
           <button onClick={() => logOut()}>로그아웃</button>
         </div>
@@ -168,7 +194,7 @@ setPrio(uniquePrio);
           <button onClick={() => router.push("/")}>로그인</button>
         </div>
       )}
-      <p>{loginEmail}님, 안녕하세요!</p>
+      <p>{loginEmail || email}님, 안녕하세요!</p>
       
       <Fetch />
     </>

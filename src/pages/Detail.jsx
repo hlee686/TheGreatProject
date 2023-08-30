@@ -122,6 +122,7 @@ try {
     } catch (error) {
       console.log("자막이 없어요 아쉽게도")
     }
+    handleSplit()
 };
 
 
@@ -348,7 +349,7 @@ try {
   
   return (
     <>
-      <button onClick={handleSplit}>Split</button>
+      {/* <button onClick={handleSplit}>Split</button> */}
       <button onClick={handleGoBack}>홈</button>
       <div>
         <h2>Sentences:</h2>
@@ -367,7 +368,7 @@ try {
         <button onClick={byEmail}>나의 표현집</button>
       )}
       나의 표현집을 보려면 로그인 해주세요!
-      <p onClick={highlight}>{subtitles}</p>
+      {/* <p onClick={highlight}>{subtitles}</p> */}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal">

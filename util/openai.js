@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const OPENAI_API_KEY = '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'
+const OPENAI_API_KEY = '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'
 
 
 export async function splitParagraphIntoSentences(paragraph) {
