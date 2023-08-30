@@ -120,7 +120,7 @@ try {
       setSubtitles(cleanedResult);
       setParagraph(cleanedResult)
     } catch (error) {
-      console.log("자막이 없어요 아쉽게도")
+      alert("자막이 없어요 아쉽게도")
     }
     handleSplit()
 };

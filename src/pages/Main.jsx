@@ -124,7 +124,7 @@ export default function Main() {
           const list = await res.json();
           const userEmail = list[0].email;
           localStorage.setItem("id", userEmail);
-          setLoginEmail(true); 
+          setLoginEmail(userEmail); 
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -146,7 +146,7 @@ export default function Main() {
           const list = await res.json();
           const userEmail = list[0].email;
           localStorage.setItem("email", userEmail);
-          setEmail(true); 
+          setEmail(userEmail); 
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -179,7 +179,8 @@ export default function Main() {
           {item.points+20}점
         </p></>
       ))}
-      {setPoint(prio.filter(item=>item.email==loginEmail)[0]?.points)}
+      {loginEmail && setPoint(prio.filter(item=>item.email==loginEmail)[0]?.points)}
+      {email && setPoint(prio.filter(item=>item.email==email)[0]?.points)}
       <Ranking />
       {(loginEmail || email) ? (
         <div>

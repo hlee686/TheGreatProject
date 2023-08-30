@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react"
 import { useAtom, useAtomValue } from "jotai"
-import { loginByEmail, myPoint, loggedId, loggedinViaEmail } from "@/app/atoms"
+import { loginByEmail, myPoint, loggedId, loggedinViaEmail, loggedInAtom } from "@/app/atoms"
 
 export default function Ranking(){
   const [name, setName] = useAtom(loginByEmail)
   const [points, setPoints] = useAtom(myPoint)
   const [email, setEmail] = useAtom(loggedId)
   const [logged, setLogged] = useAtom(loggedinViaEmail)
+  const [google, setGoogle] = useAtom(loggedInAtom)
 
 useEffect(()=>{
   async function formData() {
@@ -41,6 +42,6 @@ useEffect(()=>{
 },[])
 
   return (<div>
-    <div>나의 포인트: {logged && points+20}</div>
+    <div>나의 포인트: {logged && points+20} {google && points+20}</div>
   </div>)
 }
