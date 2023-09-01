@@ -130,20 +130,20 @@ try {
     .join('\n');
       await setSubtitles(cleanedResult);
       await setParagraph(cleanedResult)
-      await setSplitP(true)
+      setSplitP(true)
     } catch (error) {
       alert("자막이 없어요 아쉽게도")
     }
 };
 
-// useEffect(()=>{
-//   async function split(){
-//     if(splitP){
-//       await handleSplit()
-//     }
-//   }
-//   split()
-// },[splitP])
+useEffect(()=>{
+  async function split(){
+    if(splitP){
+      await handleSplit()
+    }
+  }
+  split()
+},[splitP])
 
 
   useEffect(() => {
@@ -389,7 +389,7 @@ try {
         <button onClick={byEmail}>나의 표현집</button>
       )}
       나의 표현집을 보려면 로그인 해주세요!
-       <p onClick={highlight}>{subtitles}</p> 
+       {/* <p onClick={highlight}>{subtitles}</p>  */}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
