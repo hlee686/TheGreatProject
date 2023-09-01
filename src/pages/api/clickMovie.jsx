@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   const db = (await connectDB).db("TimeKiller");
   let list = await db.collection("post").find({ email: loginId }).toArray();
 
-    const updatedPoints = list[0].points - 10;
+    const updatedPoints = list[0].points - 2;
     await db.collection("post").updateOne(
       { _id: list[0]._id },
       { $set: { points: updatedPoints } }

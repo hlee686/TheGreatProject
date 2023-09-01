@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react"
 import Link from "next/link"
-import { filtered, loginByEmail, loggedId } from "../atoms"
+import { filtered, loginByEmail, loggedId, tPoints } from "../atoms"
 import {atom, useAtom} from "jotai"
 import axios from 'axios';
 import "./page.css"
@@ -12,6 +12,8 @@ export default function HighRating() {
   const [slideIndex, setSlideIndex] = useState(0);
   const [loginId, setLoginId] = useAtom(loginByEmail)
   const [googleId, setGoogleId] = useAtom(loggedId)
+
+  const [totalPoint, setTotalPoint] = useAtom(tPoints)
 
   useEffect(() => {
     async function fetchData() {
@@ -71,7 +73,8 @@ export default function HighRating() {
       }
     })
     const json = await response.json()
-    console.log("여기다", json)
+    const totalPoints = json.reduce((accumulator, currentValue) => accumulator + currentValue.points, 0);
+    setTotalPoint(totalPoints)
   }
 
   return (
@@ -82,19 +85,35 @@ export default function HighRating() {
             key={idx}
             className={`slide`}
           >
-           <Link href={{ pathname: '/Detail', query: { id: movie.id } }}>
-    <p>
-      <img
-        src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-        alt="Poster"
-        style={{ width: '300px', height: '300px', marginRight: '10px' }}
-      />
-    </p>
-  </Link>
+<Link
+  href={{ pathname:totalPoint > 0 && '/Detail', query: { id: movie.id } }}
+  onClick={() => {
+    if (totalPoint <= 0) {
+      alert('포인트가 부족합니다');
+    }
+  }}
+  style={{ cursor: totalPoint <= 0 ? 'not-allowed' : 'pointer' }}
+>
+  <p>
+    <img
+      src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+      alt="Poster"
+      style={{ width: '300px', height: '300px', marginRight: '10px' }}
+    />
+  </p>
+</Link>
 
-            <Link href={{ pathname: '/Detail', query: { id: movie.id } }} onClick={clickMovie}>
-              <p>{movie.title}</p>
-            </Link>
+
+
+
+  <Link
+  href={{ pathname: '/Detail', query: { id: movie.id } }}
+  onClick={clickMovie}
+  style={{ pointerEvents: totalPoint <= 0 ? 'none' : 'auto' }}
+>
+  <p>{movie.title}</p>
+</Link>
+
           </div>
         ))}
       </div>

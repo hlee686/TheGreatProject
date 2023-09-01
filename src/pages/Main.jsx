@@ -1,7 +1,7 @@
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useAtom } from 'jotai';
-import { loggedInAtom, loginByEmail, loggedinViaEmail, loggedId, myPoint } from '../app/atoms';
+import { loggedInAtom, loginByEmail, loggedinViaEmail, loggedId, myPoint, tPoints } from '../app/atoms';
 import { useAtomValue } from 'jotai';
 import Fetch from '@/app/components/page';
 import Ranking from '../app/components/ranking';
@@ -20,6 +20,8 @@ export default function Main() {
 
   const [initialEmail, setInitialEmail] = useState('');
   const [initialGoogle, setInitialGoogle] = useState('');
+
+  const [pointVal, setPointVal] = useAtom(tPoints)
 
   useEffect(() => {
     const savedEmailLogin = localStorage.getItem('id');
