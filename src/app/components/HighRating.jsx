@@ -76,7 +76,7 @@ export default function HighRating() {
       const json = await response.json();
       const totalPoints = json.reduce(
         (accumulator, currentValue) => accumulator + currentValue.points,
-        0
+        20
       );
       setTotalPoint(totalPoints);
     };

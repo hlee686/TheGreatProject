@@ -57,7 +57,6 @@ export default function Main() {
     }
   }, [loginEmail, email]);
   
-
   useEffect(() => {
     async function rank() {
       try {
@@ -69,19 +68,19 @@ export default function Main() {
         });
         if (res.ok) {
           const list = await res.json();
-
+  
           const filteredList = list.filter(
             (item) => (
               (item.email !== null && item.email !== "") || 
               (item.emailLogin !== null && item.emailLogin !== "")
             )
           );
-
+  
           const uniqueEmails = Array.from(new Set(filteredList.map((item) => item.email || item.emailLogin)));
-
+  
           // 각 이메일 주소의 합산 점수를 계산
           const emailPointsMap = {};
-
+  
           filteredList.forEach((item) => {
             const email = item.email || item.emailLogin;
             if (email !== null) {
@@ -92,26 +91,34 @@ export default function Main() {
               }
             }
           });
-
+  
           // 이메일 주소와 합산 점수를 배열로 변환
           const totalList = uniqueEmails.map((email) => ({
             email,
             points: emailPointsMap[email] || 0, 
           }));
-
+  
           totalList.sort((a, b) => b.points - a.points);
-
+  
           const uniquePrio = totalList;
-
+  
           setPrio(uniquePrio);
           console.log(totalList);
+  
+          const loggedInUserPoint = loginEmail ? totalList.find(item => item.email === loginEmail)?.points : 0;
+          const userEmailPoint = email ? totalList.find(item => item.email === email)?.points : 0;
+  
+          // NaN이면 0으로 설정합니다.
+          setPoint(loggedInUserPoint || 0);
+          setPointVal(userEmailPoint || 0);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     }
     rank();
-  }, []);
+  }, [prio]); // prio 변수를 의존성 배열에 추가
+  
 
   useEffect(() => {
     async function loginMain() {
@@ -183,10 +190,10 @@ export default function Main() {
           {item.points+20}점
         </p></>
       ))}
-      {loginEmail && setPoint(prio.filter(item=>item.email==loginEmail)[0]?.points)}
-      {email && setPoint(prio.filter(item=>item.email==email)[0]?.points)}
+      {/* {loginEmail && setPoint(prio.filter(item=>item.email==loginEmail)[0]?.points)}
+      {email && setPoint(prio.filter(item=>item.email==email)[0]?.points)} */}
 
-      <div>나의 포인트: {point}</div>
+      <div>나의 포인트: {point ? point+20 : pointVal +20}</div>
       {(loginEmail || email) ? (
         <div>
           <p>
