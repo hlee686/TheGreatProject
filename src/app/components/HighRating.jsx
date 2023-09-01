@@ -65,65 +65,89 @@ export default function HighRating() {
     }
   };
 
-  const clickMovie = async() =>{
-    const response = await fetch(`/api/clickMovie?loginId=${googleId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-    const json = await response.json()
-    const totalPoints = json.reduce((accumulator, currentValue) => accumulator + currentValue.points, 0);
-    setTotalPoint(totalPoints)
-  }
-
+  useEffect(()=>{
+    const clickMovie = async () => {
+      const response = await fetch(`/api/clickMovie?loginId=${googleId || loginId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const json = await response.json();
+      const totalPoints = json.reduce(
+        (accumulator, currentValue) => accumulator + currentValue.points,
+        0
+      );
+      setTotalPoint(totalPoints);
+    };
+    clickMovie()
+  },[googleId, loginId])
+  
   return (
     <div className="slider-container">
       <div className="slider" style={{ transform: `translateX(-${slideIndex * 310}px)` }}>
         {filteredMovies.map((movie, idx) => (
-          <div
-            key={idx}
-            className={`slide`}
-          >
-<Link
-  href={{ pathname: '/Detail', query: { id: movie.id } }}
-  onClick={() => {
-    if (totalPoint <= 0) {
-      alert('포인트가 부족합니다');
-    }
-  }}
-  style={{ cursor: totalPoint <= 0 ? 'not-allowed' : 'pointer' }}
->
-  <p>
-    <img
-      src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-      alt="Poster"
-      style={{ width: '300px', height: '300px', marginRight: '10px' }}
-    />
-  </p>
-</Link>
-
-
-
-
-  <Link
-  href={{ pathname: '/Detail', query: { id: movie.id } }}
-  onClick={clickMovie}
-  style={{ pointerEvents: totalPoint <= 0 ? 'none' : 'auto' }}
->
-  <p>{movie.title}</p>
-</Link>
-
+          <div key={idx} className={`slide`}>
+            {/* First Link */}
+            {totalPoint >= 0 ? (
+              <Link
+                href={{ pathname: (totalPoint >= 0 ) && '/Detail', query: { id: movie.id } }}
+                style={{ cursor: 'pointer' }}
+              >
+                <p>
+                  <img
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    alt="Poster"
+                    style={{ width: '300px', height: '300px', marginRight: '10px' }}
+                    onClick={() => {
+                      if (totalPoint < 0) {
+                        alert('포인트가 부족합니다');
+                      }
+                    }}
+                  />
+                </p>
+              </Link>
+            ) : (
+              <div>
+                <p>
+                  <img
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    alt="Poster"
+                    style={{ width: '300px', height: '300px', marginRight: '10px' }}
+                    onClick={() => {
+                      if (totalPoint < 0) {
+                        alert('포인트가 부족합니다');
+                      }
+                    }}
+                  />
+                </p>
+              </div>
+            )}
+  
+            {/* Second Link */}
+            <Link
+              href={{ pathname: (totalPoint >=0 ) && '/Detail', query: { id: movie.id } }}
+              onClick={() => {
+                if (totalPoint < 0) {
+                  alert('포인트가 부족합니다');
+                } else {
+                  clickMovie(); // Call the clickMovie function when totalPoint is not negative
+                }
+              }}
+              style={{ cursor: totalPoint < 0 ? 'not-allowed' : 'pointer' }}
+            >
+              <p>{movie.title}</p>
+            </Link>
           </div>
         ))}
       </div>
-
-      <button style={{color: "white", fontSize: "50px"}} className="prev-btn" onClick={() => handleSlide('prev')}>
+  
+      <button style={{ color: 'white', fontSize: '50px' }} className="prev-btn" onClick={() => handleSlide('prev')}>
         &#10094;
       </button>
-      <button style={{color: "white", fontSize: "50px"}} className="next-btn" onClick={() => handleSlide('next')}>
+      <button style={{ color: 'white', fontSize: '50px' }} className="next-btn" onClick={() => handleSlide('next')}>
         &#10095;
       </button>
     </div>
   );
-}
+            }  

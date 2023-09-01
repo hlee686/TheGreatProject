@@ -12,6 +12,8 @@ import Link from "next/link"
 import { v4 as uuidv4 } from 'uuid';
 import "./DetailStyle.css"
 import { splitParagraphIntoSentences } from '../../util/openai'
+import { useMemo } from 'react';
+import debounce from 'lodash.debounce';
 
 export default function Detail() {
   const [idData, setIdData] = useAtom(idAtom);
@@ -87,8 +89,7 @@ let apiKey = 'AIzaSyBn6uaEI3OfsjLXdMSiYvyuke7ijZdBBas'
 
       // matches 배열의 길이가 0보다 크면 문법 오류가 있음
       const hasGrammarError = matches.length > 0;
-
-      console.log("문법 오류 여부:", !hasGrammarError);
+      !hasGrammarError ? alert("맞는 문법입니다") : alert("틀린 문법! 다시 응용해주세요!")
     } catch (error) {
       if (error.response && error.response.status === 429) {
         console.error("너무 많은 요청입니다. 잠시 후 다시 시도하세요.");
@@ -102,39 +103,36 @@ let apiKey = 'AIzaSyBn6uaEI3OfsjLXdMSiYvyuke7ijZdBBas'
 
   
   const fetchSubtitles = async () => {
+    alert("5초 후 자막이 나타납니다")
     const url = `https://subtitles-for-youtube.p.rapidapi.com/subtitles/${trailer}.srt`;
-const options = {
-	method: 'GET',
-	headers: {
-		'X-RapidAPI-Key': '3c2c74efdcmsh0332beb878c66c5p107718jsne3e0d5bcb02e',
-		'X-RapidAPI-Host': 'subtitles-for-youtube.p.rapidapi.com'
-	}
-};
-
-try {
-	const response = await fetch(url, options).catch(()=>setSubtitles("자막 없는 영상입니다"));
-	const result = await response.text();
-
-  const cleanedResult = result
-    .replace(/\d+/g, '\n') 
-    .replace(/::,/g, '::,')
-    .replace(/\./g, '')
-    .replace(/EMBER|AIR PERSON/g, '')
-    .replace(/ --> /g, '')
-    .replace(/::,::,/g, '')
-    .replace(/::::,/g, '')
-    .replace(/:/g, '')
-    .replace(/,\s*,/g, '\n')
-    .split('\n')
-    .filter((line) => line.trim() !== '')
-    .join('\n');
-      await setSubtitles(cleanedResult);
-      await setParagraph(cleanedResult)
-      setSplitP(true)
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': '3c2c74efdcmsh0332beb878c66c5p107718jsne3e0d5bcb02e',
+        'X-RapidAPI-Host': 'subtitles-for-youtube.p.rapidapi.com'
+      }
+    };
+  
+    try {
+      const response = await fetch(url, options);
+      const result = await response.text();
+  
+      const cleanedResult = result.replace(/(\d+|EMBER|AIR PERSON)|(::,|\.| --> |::,::,|::::|:|,\s*,)/g, '\n')
+        .split('\n')
+        .filter((line) => line.trim() !== '')
+        .join('\n');
+  
+      await Promise.all([
+        setSubtitles(cleanedResult),
+        setParagraph(cleanedResult),
+      ]);
+  
+      setSplitP(true);
     } catch (error) {
-      alert("자막이 없어요 아쉽게도")
+      alert("자막이 없어요 아쉽게도");
     }
-};
+  };
+  
 
 useEffect(()=>{
   async function split(){
@@ -370,15 +368,16 @@ useEffect(()=>{
   
   return (
     <>
-       <button onClick={handleSplit}>Split</button> 
+       {/* <button onClick={handleSplit}>Split</button>  */}
       <button onClick={handleGoBack}>홈</button>
       <div>
         <h2>Sentences:</h2>
-        <div style={{ overflowY: 'scroll', maxHeight: '300px' }}>
-          {sentences.map((sentence, index) => (
-          <p onClick={highlight} key={index}>{sentence}</p>
-          ))}
-        </div>
+        <div style={{ overflowY: 'scroll', maxHeight: '300px', border: '1px solid #ccc', padding: '10px' }}>
+  {sentences.map((sentence, index) => (
+    <p onClick={highlight} key={index}>{sentence}</p>
+  ))}
+</div>
+
 
       </div>
       <button onClick={fetchSubtitles}>자막보기</button>
