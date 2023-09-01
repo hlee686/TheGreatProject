@@ -61,36 +61,44 @@ export default function Detail() {
 let videoId = 's-7pyIxz8Qg';
 let apiKey = 'AIzaSyBn6uaEI3OfsjLXdMSiYvyuke7ijZdBBas'
 
+  const grammarAPI = async () => {
+    const url = 'https://grammarbot.p.rapidapi.com/check';
+    const data = new URLSearchParams({
+      text: updateVal,
+      lang: 'en'
+    });
 
-  useEffect(() => {
-    (async () => {
-      const options = {
-        method: 'POST',
-  url: 'https://grammarbot-neural.p.rapidapi.com/v1/check',
-  headers: {
-    'content-type': 'application/json',
-    'X-RapidAPI-Key': '3c2c74efdcmsh0332beb878c66c5p107718jsne3e0d5bcb02e',
-    'X-RapidAPI-Host': 'grammarbot-neural.p.rapidapi.com'
-  },
-  data: {  
-    text: comment,
-    lang: 'en'
-  }
-      };
-  
-      try {
-        const response = await axios.request(options);
-        await setCommentExp(response.data.correction);
-        setGrammarCheck(true)
-      } catch (error) {
-        if (error.response && error.response.status === 429) {
-          console.error("너무 많은 요청입니다. 잠시 후 다시 시도하세요.");
-        } else {
-          console.error(error);
-        }
+    const options = {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+        'X-RapidAPI-Key': '3c2c74efdcmsh0332beb878c66c5p107718jsne3e0d5bcb02e',
+        'X-RapidAPI-Host': 'grammarbot.p.rapidapi.com'
+      },
+      body: data
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const result = await response.json();
+
+      // API 응답에서 matches 배열을 가져옴
+      const matches = result.matches;
+
+      // matches 배열의 길이가 0보다 크면 문법 오류가 있음
+      const hasGrammarError = matches.length > 0;
+
+      console.log("문법 오류 여부:", !hasGrammarError);
+    } catch (error) {
+      if (error.response && error.response.status === 429) {
+        console.error("너무 많은 요청입니다. 잠시 후 다시 시도하세요.");
+      } else {
+        console.error(error);
       }
-    })();
-  }, []);
+    }
+  };
+
+
 
   
   const fetchSubtitles = async () => {
@@ -128,14 +136,14 @@ try {
     }
 };
 
-useEffect(()=>{
-  async function split(){
-    if(splitP){
-      await handleSplit()
-    }
-  }
-  split()
-},[splitP])
+// useEffect(()=>{
+//   async function split(){
+//     if(splitP){
+//       await handleSplit()
+//     }
+//   }
+//   split()
+// },[splitP])
 
 
   useEffect(() => {
@@ -340,6 +348,7 @@ useEffect(()=>{
         const list = await res.json();
         console.log('Response data:', list)
         await setByEmails(list)
+        await setIsModalOpen(true)
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -361,7 +370,7 @@ useEffect(()=>{
   
   return (
     <>
-      {/* <button onClick={handleSplit}>Split</button>  */}
+       <button onClick={handleSplit}>Split</button> 
       <button onClick={handleGoBack}>홈</button>
       <div>
         <h2>Sentences:</h2>
@@ -380,7 +389,7 @@ useEffect(()=>{
         <button onClick={byEmail}>나의 표현집</button>
       )}
       나의 표현집을 보려면 로그인 해주세요!
-       {/* <p onClick={highlight}>{subtitles}</p>  */}
+       <p onClick={highlight}>{subtitles}</p> 
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
@@ -402,6 +411,7 @@ useEffect(()=>{
                           onChange={(e) => {
                             setUpdateVal(e.target.value);
                           }}
+                          onBlur={()=> grammarAPI(updateVal)}
                         />
                         <p>{item.text}</p>
                         <div style={{ color: "blue", fontStyle: 'italic' }}>{item.title}</div>
