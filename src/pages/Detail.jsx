@@ -47,6 +47,8 @@ export default function Detail() {
   const [loggedinStatus, setLogginStatus] = useAtom(loggedinViaEmail)
   const [paragraph, setParagraph] = useState('');
   const [sentences, setSentences] = useState([])
+  
+  const [splitP, setSplitP] = useState(false)
 
 
   const router = useRouter()
@@ -57,7 +59,7 @@ export default function Detail() {
 
   
 let videoId = 's-7pyIxz8Qg';
-let apiKey = 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0'
+let apiKey = 'AIzaSyBn6uaEI3OfsjLXdMSiYvyuke7ijZdBBas'
 
 
   useEffect(() => {
@@ -104,6 +106,7 @@ const options = {
 try {
 	const response = await fetch(url, options).catch(()=>setSubtitles("자막 없는 영상입니다"));
 	const result = await response.text();
+
   const cleanedResult = result
     .replace(/\d+/g, '\n') 
     .replace(/::,/g, '::,')
@@ -117,13 +120,22 @@ try {
     .split('\n')
     .filter((line) => line.trim() !== '')
     .join('\n');
-      setSubtitles(cleanedResult);
-      setParagraph(cleanedResult)
+      await setSubtitles(cleanedResult);
+      await setParagraph(cleanedResult)
+      await setSplitP(true)
     } catch (error) {
       alert("자막이 없어요 아쉽게도")
     }
-    handleSplit()
 };
+
+useEffect(()=>{
+  async function split(){
+    if(splitP){
+      await handleSplit()
+    }
+  }
+  split()
+},[splitP])
 
 
   useEffect(() => {
@@ -147,7 +159,7 @@ try {
           {
             params: {
               q: movieData.title + 'Official Trailer' + "HD",
-              key: 'AIzaSyCtr7HJQBKBRVCb3cZGDHO2llm1uy_vWh0',
+              key: 'AIzaSyBn6uaEI3OfsjLXdMSiYvyuke7ijZdBBas',
               part: 'snippet',
               maxResults: 10,
               type: 'video',
@@ -349,7 +361,7 @@ try {
   
   return (
     <>
-      {/* <button onClick={handleSplit}>Split</button> */}
+      {/* <button onClick={handleSplit}>Split</button>  */}
       <button onClick={handleGoBack}>홈</button>
       <div>
         <h2>Sentences:</h2>
@@ -368,7 +380,7 @@ try {
         <button onClick={byEmail}>나의 표현집</button>
       )}
       나의 표현집을 보려면 로그인 해주세요!
-      {/* <p onClick={highlight}>{subtitles}</p> */}
+       {/* <p onClick={highlight}>{subtitles}</p>  */}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
