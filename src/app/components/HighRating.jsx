@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react"
 import Link from "next/link"
-import { filtered } from "../atoms"
+import { filtered, loginByEmail, loggedId } from "../atoms"
 import {atom, useAtom} from "jotai"
 import axios from 'axios';
 import "./page.css"
@@ -10,6 +10,8 @@ export default function HighRating() {
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [slideIndex, setSlideIndex] = useState(0);
+  const [loginId, setLoginId] = useAtom(loginByEmail)
+  const [googleId, setGoogleId] = useAtom(loggedId)
 
   useEffect(() => {
     async function fetchData() {
@@ -61,6 +63,17 @@ export default function HighRating() {
     }
   };
 
+  const clickMovie = async() =>{
+    const response = await fetch(`/api/clickMovie?loginId=${googleId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    const json = await response.json()
+    console.log("여기다", json)
+  }
+
   return (
     <div className="slider-container">
       <div className="slider" style={{ transform: `translateX(-${slideIndex * 310}px)` }}>
@@ -79,7 +92,7 @@ export default function HighRating() {
     </p>
   </Link>
 
-            <Link href={{ pathname: '/Detail', query: { id: movie.id } }}>
+            <Link href={{ pathname: '/Detail', query: { id: movie.id } }} onClick={clickMovie}>
               <p>{movie.title}</p>
             </Link>
           </div>
