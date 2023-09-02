@@ -60,6 +60,9 @@ export default function LoginByEmail() {
         const userEmail = session.data.user.email;
         setGoogle(userEmail);
         setLogged(true);
+        if(logged){
+          router.push("/Top")
+        }
       }
     }
   
@@ -75,6 +78,7 @@ export default function LoginByEmail() {
   };
   return (
     <div className="LoginBody">
+      <h1>로그인</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <input type="text" placeholder="email입력" {...register("userEmail", { required: true })} />
@@ -84,7 +88,7 @@ export default function LoginByEmail() {
           <input type="password" placeholder="비밀번호입력" {...register("password", { required: true })} />
           {errors.password && <p>Password is required</p>}
         </div>
-        <button type="submit" style={{backgroundColor: "yellow", borderRadius: "15px"}}>로그인</button>
+        <button type="submit" style={{marginTop: "10px"}}>로그인</button>
       </form>
       {emailLogin && (
         <button onClick={handleLogout}>로그아웃</button>
@@ -95,7 +99,7 @@ export default function LoginByEmail() {
           <button className="logout-btn" onClick={handleSignOut}>로그아웃</button>
         </>
       ) : (
-        <div><button style={{width: "140px", height: "45px", borderRadius: "15px"}} className="login-btn" onClick={handleSignIn}>구글 로그인</button></div>
+        <div><button style={{backgroundColor: "#DB4437", marginTop: "20px", width: "140px", height: "35px", borderRadius: "15px"}} className="login-btn" onClick={handleSignIn}>구글 로그인</button></div>
       )}
     </div>
   );

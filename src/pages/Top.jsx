@@ -34,7 +34,7 @@ export default function Top() {
   const router = useRouter();
   const { id } = useRouter().query;
 
-  const embedUrl = "https://www.youtube.com/embed/b58gZlXm2yI";
+  const embedUrl = "https://www.youtube.com/embed/uYPbbksJxIg";
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -45,7 +45,7 @@ export default function Top() {
   
   const fetchSubtitles = async () => {
     alert("5초 후 자막이 나타납니다")
-    const url = `https://subtitles-for-youtube.p.rapidapi.com/subtitles/b58gZlXm2yI.srt`;
+    const url = `https://subtitles-for-youtube.p.rapidapi.com/subtitles/uYPbbksJxIg.srt`;
     const options = {
       method: 'GET',
       headers: {
