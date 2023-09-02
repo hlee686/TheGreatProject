@@ -18,40 +18,40 @@ export default function LoginBtn() {
   const [userEmail, setUserEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleSignIn = async () => {
-    try {
-      setLoginClicked(true);
-      await signIn("google");
-    } catch (error) {
-      console.error('Error signing in:', error);
-    }
-  };
+  // const handleSignIn = async () => {
+  //   try {
+  //     setLoginClicked(true);
+  //     await signIn("google");
+  //   } catch (error) {
+  //     console.error('Error signing in:', error);
+  //   }
+  // };
 
-  useEffect(() => {
-    async function fetchData() {
-      if (session.data) {
-        const userEmail = session.data.user.email;
-        setEmail(userEmail);
-        setLogged(true);
-        if(logged){
-          router.push("/Main")
-        }else{
-          router.push("/")
-        }
-      }
-    }
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     if (session.data) {
+  //       const userEmail = session.data.user.email;
+  //       setEmail(userEmail);
+  //       setLogged(true);
+  //       if(logged){
+  //         router.push("/Top")
+  //       }else{
+  //         router.push("/")
+  //       }
+  //     }
+  //   }
   
-    fetchData();
-  }, [session.data]);
+  //   fetchData();
+  // }, [session.data]);
   
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
+  // const handleSignOut = async () => {
+  //   try {
+  //     await signOut();
+  //   } catch (error) {
+  //     console.error('Error signing out:', error);
+  //   }
+  // };
 
   // const handleSubmit = async (e) => {
   //   e.preventDefault()
@@ -74,20 +74,21 @@ export default function LoginBtn() {
 
   return (
     <div className="login-container">
-      {logged ? (
+      {/* {logged ? (
         <>
           <p className="status">로그인 됨</p>
           <button className="logout-btn" onClick={handleSignOut}>로그아웃</button>
         </>
       ) : (
-        <button className="login-btn" onClick={handleSignIn}>구글 로그인</button>
-      )}
+        <div><button style={{width: "140px", height: "45px", borderRadius: "15px"}} className="login-btn" onClick={handleSignIn}>구글 로그인</button></div>
+      )} */}
+      <br /><br />
       {/* <form onSubmit={handleSubmit}>
         <div><input type="text" placeholder="email입력" onChange={e=>setUserEmail(e.target.value)}></input></div>
         <div><input type="password" placeholder="비밀번호입력" onChange={e=>setPassword(e.target.value)}></input></div>
         <button type="submit">로그인</button>
       </form> */}
-      {!logged && <button onClick={()=>router.push("/LoginByEmail")}>이메일 로그인</button>}
+      이미 가입 하셨나요? {<span style={{color: "red"}} onClick={()=>router.push("/LoginByEmail")}>로그인</span>}
     </div>
   );
 }

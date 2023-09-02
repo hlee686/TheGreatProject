@@ -28,6 +28,7 @@ export default function Top() {
   const [editSuccess, setEditSuccess] = useState(false)
   const [paragraph, setParagraph] = useState('');
   const [sentences, setSentences] = useState([]);
+  const [splitP, setSplitP] = useState(false)
 
 
   const router = useRouter();
@@ -41,40 +42,47 @@ export default function Top() {
     setIsModalOpen(false);
   };
 
-
+  
   const fetchSubtitles = async () => {
+    alert("5초 후 자막이 나타납니다")
     const url = `https://subtitles-for-youtube.p.rapidapi.com/subtitles/b58gZlXm2yI.srt`;
-const options = {
-	method: 'GET',
-	headers: {
-		'X-RapidAPI-Key': '3c2c74efdcmsh0332beb878c66c5p107718jsne3e0d5bcb02e',
-		'X-RapidAPI-Host': 'subtitles-for-youtube.p.rapidapi.com'
-	}
-};
-
-try {
-	const response = await fetch(url, options).catch(()=>setSubtitles("자막 없는 영상입니다"));
-	const result = await response.text();
-  const cleanedResult = result
-    .replace(/\d+/g, '\n') 
-    .replace(/::,/g, '::,')
-    .replace(/\./g, '')
-    .replace(/EMBER|AIR PERSON/g, '')
-    .replace(/ --> /g, '')
-    .replace(/::,::,/g, '')
-    .replace(/::::,/g, '')
-    .replace(/:/g, '')
-    .replace(/,\s*,/g, '\n')
-    .split('\n')
-    .filter((line) => line.trim() !== '')
-    .join('\n');
-      await setSubtitles(cleanedResult);
-      await setParagraph(cleanedResult)
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': '3c2c74efdcmsh0332beb878c66c5p107718jsne3e0d5bcb02e',
+        'X-RapidAPI-Host': 'subtitles-for-youtube.p.rapidapi.com'
+      }
+    };
+  
+    try {
+      const response = await fetch(url, options);
+      const result = await response.text();
+  
+      const cleanedResult = result.replace(/(\d+|EMBER|AIR PERSON)|(::,|\.| --> |::,::,|::::|:|,\s*,)/g, '\n')
+        .split('\n')
+        .filter((line) => line.trim() !== '')
+        .join('\n');
+  
+      await Promise.all([
+        setSubtitles(cleanedResult),
+        setParagraph(cleanedResult),
+      ]);
+  
+      setSplitP(true);
     } catch (error) {
-      console.log("자막이 없어요 아쉽게도")
+      alert("자막이 없어요 아쉽게도");
     }
-    handleSplit()
-};
+  };
+
+
+useEffect(()=>{
+  async function split(){
+    if(splitP){
+      await handleSplit()
+    }
+  }
+  split()
+},[splitP])
 
 const highlight = async (event) => {
   const selectedText = window.getSelection().toString();
@@ -253,7 +261,7 @@ return (
     <h1>자막보기를 켜고, 무작위로 표현 3개만 하이라이트 해 보세요!</h1>
     <button onClick={fetchSubtitles}>자막보기</button>
       <button onClick={seeHighlights}>나의 표현집</button>
-    <p onClick={highlight}>{subtitles}</p>
+    {/* <p onClick={highlight}>{subtitles}</p> */}
     {isModalOpen && (
       <div className="modal-overlay">
         <div className="modal">

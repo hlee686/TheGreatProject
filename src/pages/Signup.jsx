@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import "./Signup.css"
 
 const Signup = () => {
   const router = useRouter();
@@ -58,8 +59,8 @@ const Signup = () => {
 
 
   return (
-    <div>
-      <h2>Sign Up</h2>
+    <div className="SignupBody">
+      <h2>회원가입</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <input

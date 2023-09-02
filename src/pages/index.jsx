@@ -37,12 +37,18 @@ export default function Home() {
 
 
   return (
+    <>
     <div className="page-container">
+    <h1 style={{lineHeight: "0.5em"}}>허니비와 함께</h1>
+    <h1 style={{lineHeight: "0.5em"}}>재미있게 배우세요</h1>
+    <br /><br /><br />
 
     {/* {tutorialConfig && <button className="main-btn" onClick={route}>MAIN</button>} */}
+    {/* {loggedIn && <button className="top-thirty-btn" onClick={topThirty}>TUTORIAL</button>} */}
+    <button style={{width: "140px", height: "45px", borderRadius: "15px"}} onClick={signUp}>가입하기</button>
+    <br />
     <LoginBtn />
-    {loggedIn && <button className="top-thirty-btn" onClick={topThirty}>TUTORIAL</button>}
-    <button onClick={signUp}>Sign Up</button>
   </div>
+  </>
 );
   }
