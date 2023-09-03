@@ -31,3 +31,5 @@ export const loggedinViaEmail = atom(false)
 export const myPoint = atom(0)
 
 export const tPoints = atom(0)
+
+export const imgSrc = atom('')

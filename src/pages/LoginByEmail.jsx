@@ -99,7 +99,7 @@ export default function LoginByEmail() {
           <button className="logout-btn" onClick={handleSignOut}>로그아웃</button>
         </>
       ) : (
-        <div><button style={{backgroundColor: "#DB4437", marginTop: "20px", width: "140px", height: "35px", borderRadius: "15px"}} className="login-btn" onClick={handleSignIn}>구글 로그인</button></div>
+        <div><button style={{marginTop: "20px", width: "170px", height: "38px", borderRadius: "15px", backgroundColor: "white"}} className="login-btn" onClick={handleSignIn}><div style={{marginLeft: "-120px"}}><img style={{width: "30px", height: "30px"}} src="https://static.vecteezy.com/system/resources/thumbnails/011/598/471/small/google-logo-icon-illustration-free-vector.jpg"></img></div><p style={{marginTop: "-28px", marginLeft: "30px"}}>구글 로그인</p></button></div>
       )}
     </div>
   );

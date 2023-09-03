@@ -40,7 +40,7 @@ export default function Home() {
     <>
     <div className="page-container">
     <h1 style={{lineHeight: "0.5em"}}>허니비와 함께</h1>
-    <h1 style={{lineHeight: "0.5em"}}>재미있게 배우세요</h1>
+    <h1 style={{lineHeight: "0.5em"}}>재미있는 영어</h1>
     <br /><br /><br />
 
     {/* {tutorialConfig && <button className="main-btn" onClick={route}>MAIN</button>} */}

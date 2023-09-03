@@ -1,7 +1,7 @@
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useAtom } from 'jotai';
-import { loggedInAtom, loginByEmail, loggedinViaEmail, loggedId, myPoint, tPoints } from '../app/atoms';
+import { loggedInAtom, loginByEmail, loggedinViaEmail, loggedId, myPoint, tPoints, imgSrc } from '../app/atoms';
 import { useAtomValue } from 'jotai';
 import Fetch from '@/app/components/page';
 import Ranking from '../app/components/ranking';
@@ -23,6 +23,12 @@ export default function Main() {
 
   const [pointVal, setPointVal] = useAtom(tPoints)
 
+  const [imgSource, setImgSource] = useAtom(imgSrc)
+  const [imageData, setImageData] = useState([]);
+  const [view, setView] = useState(false)
+  const [rank, setRank] = useState([])
+  const [rankNum, setRankNum] = useState(0)
+
   useEffect(() => {
     const savedEmailLogin = localStorage.getItem('id');
     if (savedEmailLogin) {
@@ -30,6 +36,7 @@ export default function Main() {
       setInitialEmail(savedEmailLogin);
     }
   }, []);
+
 
   useEffect(() => {
     const savedLogin = localStorage.getItem('email');
@@ -102,8 +109,7 @@ export default function Main() {
   
           const uniquePrio = totalList;
   
-          setPrio(uniquePrio);
-          console.log(totalList);
+          setImageData(uniquePrio);
   
           const loggedInUserPoint = loginEmail ? totalList.find(item => item.email === loginEmail)?.points : 0;
           const userEmailPoint = email ? totalList.find(item => item.email === email)?.points : 0;
@@ -117,7 +123,7 @@ export default function Main() {
       }
     }
     rank();
-  }, [prio]); // prio 변수를 의존성 배열에 추가
+  }, [imageData]); // prio 변수를 의존성 배열에 추가
   
 
   useEffect(() => {
@@ -164,6 +170,13 @@ export default function Main() {
     }
     emailMain();
   }, [email]); 
+
+  useEffect(() => {
+    const userEmailAddress = loginEmail || email;
+    const userRank = imageData.findIndex(item => (item.email || item.emailLogin) === userEmailAddress);
+    const userRankDisplay = userRank >= 0 ? userRank + 1 : '등수 없음';
+    setRankNum(userRankDisplay);
+  }, [imageData, loginEmail, email]);
   
   const logOut = () => {
     signOut();
@@ -173,32 +186,65 @@ export default function Main() {
     setEmail(''); 
   }
 
+  useEffect(() => {
+    const userImg = async () => {
+      const res = await fetch(`api/userInfo`, {
+        method: "GET"
+      });
+      if (res.ok) {
+        const json = await res.json();
+        setRank(json)
+  
+        // 모든 이미지 정보 추출
+        const allImages = json.map((item, idx) => ({
+          email: item.email || item.emailLogin,
+          imgSrc: item.imgSrc 
+        }));
+        await setImageData(allImages);
+        setView(!view)
+      }
+    };
+    userImg();
+  }, []);
+
+  function getImgSrcForEmail(email) {
+    const matchingItem = rank.find(item => (item.email || item.emailLogin) === email);
+    return matchingItem ? matchingItem.imgSrc : ''; 
+  }
+
 
   return (
-    <>
-      {prio.slice(0,5).map((item, idx) => (
-        (item.email || item.emailLogin) &&
-        <><p
-          style={{
-            backgroundColor: "lightgreen",
-            color: "black",
-            border: "1px solid black",
-          }}
-          key={idx}
-        >
-          {idx + 1}위: {(item.email || item.emailLogin)}님 /{" "}
-          {item.points+20}점
-        </p></>
-      ))}
+    <div style={{textAlign: "center", margin:"50px", justifyContent: "center"}}>
+
+<div style={{backgroundColor: "yellow", borderRadius: "10px", marginLeft: "550px", width: "500px", height: "30px", border: "1px solid black"}}>{point ? point+20 : pointVal +20}점 획득! {loginEmail || email} 님은 현재
+       {rankNum} 
+       등 입니다. 랭킹에 도전해보세요!</div>
+
+<div style={{ display: "flex", flexDirection: "row" , justifyContent: "center"}}>
+  {imageData.map((item, idx) => (
+    (item.email || item.emailLogin) && (
+      <div key={idx} style={{ marginLeft: "10px" }}>
+        {/* {idx + 1}위: {(item.email || item.emailLogin)}님 /{" "}
+        {item.points + 20}점 */}
+        <img
+          src={getImgSrcForEmail(item.email || item.emailLogin)}
+          style={{ width: "120px", height: "120px", marginRight: "100px", border: "1px solid black", borderRadius: "50px" }}
+        />
+        <div>
+        {idx+1}위
+        {(item.email || item.emailLogin)}님
+        {item.points + 20}점
+        </div>
+      </div>
+    )
+  ))}
+</div>
+
       {/* {loginEmail && setPoint(prio.filter(item=>item.email==loginEmail)[0]?.points)}
       {email && setPoint(prio.filter(item=>item.email==email)[0]?.points)} */}
 
-      <div>나의 포인트: {point ? point+20 : pointVal +20}</div>
       {(loginEmail || email) ? (
         <div>
-          <p>
-            로그인 상태 <span>{loginEmail || email}</span>
-          </p>
           <button onClick={() => logOut()}>로그아웃</button>
         </div>
       ) : (
@@ -207,9 +253,8 @@ export default function Main() {
           <button onClick={() => router.push("/")}>로그인</button>
         </div>
       )}
-      <p>{loginEmail || email}님, 안녕하세요!</p>
       
       <Fetch />
-    </>
+    </div>
   );
 }

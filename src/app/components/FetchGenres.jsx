@@ -44,7 +44,7 @@ const FetchGenres = () => {
   };
 
   return (
-    <div style={{display: "flex", flexDirection: "row"}}>
+    <div style={{ textAlign: "center", margin:"50px"}}>
       <form onSubmit={genreChange}>
         <input type="text" name="genre" placeholder="장르" />
         <button type="submit">장르선택</button>

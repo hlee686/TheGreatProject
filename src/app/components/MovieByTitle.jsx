@@ -122,7 +122,7 @@ export default function MovieByTitle() {
   }, [clicked, title]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row' }}>
+    <div style={{ textAlign: "center", margin:"50px"}}>
       <form onSubmit={searchTitle}>
         <input type="text" name="title" placeholder="영화제목" />
         <button type="submit">Search</button>

@@ -126,7 +126,7 @@ export default function HighRating() {
   
             {/* Second Link */}
             <Link
-              href={{ pathname: (totalPoint >=0 ) && '/Detail', query: { id: movie.id } }}
+              href={{ pathname: (totalPoint >=-100 ) && '/Detail', query: { id: movie.id } }}
               onClick={() => {
                 if (totalPoint < 0) {
                   alert('포인트가 부족합니다');

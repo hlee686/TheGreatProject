@@ -2,7 +2,7 @@ import { connectDB } from "../../../util/database";
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { email, password } = req.body;
+    const { email, password, imgSrc } = req.body;
 
     try {
       const db = (await connectDB).db("TimeKiller");
@@ -16,6 +16,7 @@ export default async function handler(req, res) {
         await db.collection("users").insertOne({
           email,
           password,
+          imgSrc
         });
 
         res.status(200).json({ message: 'Signup successful' });

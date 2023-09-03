@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useAtom } from 'jotai';
-import { idAtom, loggedInAtom, loggedId, commentData, commentBool, userId , loggedinViaEmail, loginByEmail} from '../app/atoms';
+import {imgSrc, idAtom, loggedInAtom, loggedId, commentData, commentBool, userId , loggedinViaEmail, loginByEmail} from '../app/atoms';
 import Comments from '@/app/components/Comments';
 import { signIn, signOut, getSession, useSession} from 'next-auth/react';
 import "./DetailPage.css"
@@ -51,6 +51,7 @@ export default function Detail() {
   const [sentences, setSentences] = useState([])
   
   const [splitP, setSplitP] = useState(false)
+  const [imgSource, setImgSource] = useAtom(imgSrc)
 
 
   const router = useRouter()
@@ -202,7 +203,8 @@ useEffect(()=>{
         userIdVal,
         movieTitle,
         email,
-        emailLogin
+        emailLogin,
+        imgSource
       };
       
 

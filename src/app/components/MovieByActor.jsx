@@ -47,7 +47,7 @@ export default function MovieByActor(){
   };
 
   return (
-    <div style={{display: "flex", flexDirection: "row"}}>
+    <div style={{ textAlign: "center", margin:"50px"}}>
       <form onSubmit={actorChange}>
         <input
           type="text"
