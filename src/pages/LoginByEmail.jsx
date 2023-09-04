@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAtom } from 'jotai';
-import { loggedInAtom, loginByEmail, loggedinViaEmail, loggedId } from '@/app/atoms';
+import { loggedInAtom, loginByEmail, loggedinViaEmail, loggedId , editSc} from '@/app/atoms';
 import { useRouter } from 'next/router';
 import { signIn, signOut, getSession, useSession} from 'next-auth/react';
 import "./Login.css"
@@ -16,10 +16,33 @@ export default function LoginByEmail() {
   const [google, setGoogle] = useAtom(loggedId)
   const session = useSession()
   const [loginClicked, setLoginClicked] = useState(false)
+  const [edit, setEdit] = useAtom(editSc)
+
+  const tutorialOrNot = async (byEmail) => {
+    const res = await fetch(`/api/tutorialOrNot?byEmail=${byEmail}`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    if (res.ok) {
+      const list = await res.json();
+      const filteredList = list.filter(item => item.updateTimes > 0);
+      console.log("봐라", filteredList);
+  
+      // Check if filteredList is empty using .length
+      if (filteredList.length === 0) {
+        router.push("/Top");
+      } else {
+        router.push("/Main");
+      }
+    }
+  }
+  
 
   const onSubmit = async (data) => {
     try {
-      const res = await fetch(`/api/emailLogin`, {
+      const res = await fetch(`/api/emailLogin?byEmail=${data.userEmail}`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
@@ -30,14 +53,16 @@ export default function LoginByEmail() {
         const loginList = list.some(item => (item.email === data.userEmail && item.password === data.password));
         setLogin(loginList);
         setLogged(true);
-        setByEmail(list.find(item => item.email === data.userEmail)?.email || alert("없는 아이디")); 
+        const userEmail = list.find(item => item.email === data.userEmail)?.email;
+        await setByEmail(userEmail || alert("없는 아이디")); 
         setEmailLogin(true);
-        byEmail && router.push("/Top"); 
+        tutorialOrNot(byEmail)
       }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
+  
 
   const handleLogout = () => {
     setLogin(false);

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react"
 import { useRouter } from 'next/router';
-import {loggedId, tutorial, tutorialNum, loginByEmail} from "../app/atoms"
+import {loggedId, tutorial, tutorialNum, loginByEmail, editSc} from "../app/atoms"
 import {useAtom} from 'jotai'
 import { v4 as uuidv4 } from 'uuid';
 import "./Top.css"
@@ -25,7 +25,7 @@ export default function Top() {
   const [tutorialT, setTutorialT] = useAtom(tutorialNum)
   const [tutorialCnt, setTutorialCnt] = useState(0)
   const [highlighted, setHighlighted] = useState(false)
-  const [editSuccess, setEditSuccess] = useState(false)
+  const [editSuccess, setEditSuccess] = useAtom(editSc)
   const [paragraph, setParagraph] = useState('');
   const [sentences, setSentences] = useState([]);
   const [splitP, setSplitP] = useState(false)
@@ -220,14 +220,14 @@ const passTutorial = async() =>{
       console.error('Error fetching data:', error);
     }
   };
-  if(tutorialCnt > 2 && editSuccess){
+  if(tutorialCnt > 1 && editSuccess){
     alert('튜토리얼 완료, 축하합니다!');
     router.push("/Main")
   }
 
 useEffect(()=>{
   passTutorial()
-},[highlightList, editSuccess])
+},[highlight, editSuccess])
 
 const handleSplit = async () => {
   try {

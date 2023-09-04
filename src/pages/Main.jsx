@@ -174,7 +174,7 @@ export default function Main() {
   useEffect(() => {
     const userEmailAddress = loginEmail || email;
     const userRank = imageData.findIndex(item => (item.email || item.emailLogin) === userEmailAddress);
-    const userRankDisplay = userRank >= 0 ? userRank + 1 : '등수 없음';
+    const userRankDisplay = userRank >= 0 ? userRank + 1 : '데뷔 전';
     setRankNum(userRankDisplay);
   }, [imageData, loginEmail, email]);
   
