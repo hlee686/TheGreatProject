@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react"
 import { useRouter } from 'next/router';
-import {loggedId, tutorial, tutorialNum} from "../app/atoms"
+import {loggedId, tutorial, tutorialNum, loginByEmail} from "../app/atoms"
 import {useAtom} from 'jotai'
 import { v4 as uuidv4 } from 'uuid';
 import "./Top.css"
@@ -29,6 +29,7 @@ export default function Top() {
   const [paragraph, setParagraph] = useState('');
   const [sentences, setSentences] = useState([]);
   const [splitP, setSplitP] = useState(false)
+  const [byEmail, setByEmail] = useAtom(loginByEmail)
 
 
   const router = useRouter();
@@ -100,7 +101,7 @@ const highlight = async (event) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ selectedText, userIdVal, email }),
+        body: JSON.stringify({ selectedText, userIdVal, byEmail }),
       });
 
       if (response.ok) {
@@ -121,7 +122,7 @@ const highlight = async (event) => {
 const seeHighlights = async(e) => {
   e.preventDefault();
   try {
-    const res = await fetch(`/api/seeHighlightsTutorial?email=${email}`, {
+    const res = await fetch(`/api/seeHighlightsTutorial?byEmail=${byEmail}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -156,7 +157,7 @@ const updateExp = async () => {
     console.log("Fetch completed:", response);
 
     if (response.ok) {
-      await setEditSuccess(true)
+      setEditSuccess(true)
       const responseBody = await response.json();
       
       if (responseBody.success) {
@@ -200,10 +201,11 @@ const updateExp = async () => {
 //   }
 // };
 
+const [pass, setPass] = useState(false)
 
 const passTutorial = async() =>{
   try {
-      const res = await fetch(`/api/tutorialCnt?email=${email}`, {
+      const res = await fetch(`/api/tutorialCnt?byEmail=${byEmail}`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
@@ -211,7 +213,8 @@ const passTutorial = async() =>{
       });
       if (res.ok) {
         const list = await res.json();
-        setTutorialCnt(list.length+1)
+        await setTutorialCnt(list.length+1)
+        console.log(tutorialCnt)
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -224,7 +227,7 @@ const passTutorial = async() =>{
 
 useEffect(()=>{
   passTutorial()
-},[])
+},[highlightList, editSuccess])
 
 const handleSplit = async () => {
   try {

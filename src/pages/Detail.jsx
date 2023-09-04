@@ -226,7 +226,7 @@ useEffect(()=>{
   const seeHighlights = async(e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`/api/seeHighlights?email=${email}`, {
+      const res = await fetch(`/api/seeHighlights?emailLogin=${emailLogin}`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',

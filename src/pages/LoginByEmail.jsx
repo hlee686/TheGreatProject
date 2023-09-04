@@ -30,9 +30,9 @@ export default function LoginByEmail() {
         const loginList = list.some(item => (item.email === data.userEmail && item.password === data.password));
         setLogin(loginList);
         setLogged(true);
-        setByEmail(list.find(item => item.email === data.userEmail)?.email || ''); 
+        setByEmail(list.find(item => item.email === data.userEmail)?.email || alert("없는 아이디")); 
         setEmailLogin(true);
-        router.push("/Top"); 
+        byEmail && router.push("/Top"); 
       }
     } catch (error) {
       console.error('Error fetching data:', error);

@@ -1,7 +1,7 @@
 // next.config.js
 module.exports = {
   env: {
-    SERVER: "http://localhost:3001",
+    SERVER: "http://localhost:3000",
   }
 };
 

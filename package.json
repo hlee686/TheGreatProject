@@ -20,6 +20,7 @@
     "eslint-config-next": "^13.1.0",
     "fs": "^0.0.1-security",
     "google-auth-library": "^9.0.0",
+    "google-translate-api": "^2.3.0",
     "googleapis": "^123.0.0",
     "jotai": "^2.2.3",
     "lodash": "^4.17.21",
