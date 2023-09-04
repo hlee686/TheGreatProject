@@ -251,7 +251,7 @@ return (
       allowFullScreen
     />
     <div>
-        <h2>Sentences:</h2>
+        <h2>튜토리얼에 오신걸 환영합니다</h2>
         <div style={{ overflowY: 'scroll', maxHeight: '300px' }}>
           {sentences.map((sentence, index) => (
             <p onClick={highlight} key={index}>{sentence}</p>

@@ -21,7 +21,7 @@ export default function Detail() {
   const [trailer, setTrailer] = useState('');
   const { id } = useRouter().query;
   const [logged, setLogged] = useAtom(loggedInAtom);
-  const [email, setEmail] = useAtom(loggedId);
+  const [email, setEmail] = useAtom(loggedId, '');
   const [comment, setComment] = useAtom(commentData)
   const [commentB, setCommentB] = useAtom(commentBool)
 
@@ -236,6 +236,7 @@ useEffect(()=>{
         const list = await res.json();
         console.log('Response data:', list)
         setHighlightList(list)
+        setAllExp(list)
         openModal()
       }
     } catch (error) {
@@ -447,13 +448,13 @@ useEffect(()=>{
                         setUpdateVal(e.target.value);
                       }}
                     />
-                    <div style={{ color: "blue", fontStyle: 'italic' }}>{item.email}<span style={{ color: "black" }}>님의 표현</span></div>
+                    <div style={{ color: "blue", fontStyle: 'italic' }}>{item.emailLogin || item.email}<span style={{ color: "black" }}>님의 표현</span></div>
                     <button onClick={() => updateExp()}>응용하기</button>
                   </div>
                 ) : (
                   <div style={{ backgroundColor: "orange", width: "250px" }}>
                     <p>{item.text}</p>
-                    <div style={{ color: "blue", fontStyle: 'italic' }} onClick={() => byEmail(item.email)}>{item.email || item.emailLogin}<span style={{ color: "black" }}>님의 표현</span></div>
+                    <div style={{ color: "blue", fontStyle: 'italic' }} onClick={() => byEmail(item.emailLogin)}>{item.email || item.emailLogin}<span style={{ color: "black" }}>님의 표현</span></div>
                   </div>
                 )}
               </div>
