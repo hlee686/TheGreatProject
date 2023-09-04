@@ -28,7 +28,6 @@ export default function LoginByEmail() {
     if (res.ok) {
       const list = await res.json();
       const filteredList = list.filter(item => item.updateTimes > 0);
-      console.log("봐라", filteredList);
   
       // Check if filteredList is empty using .length
       if (filteredList.length === 0) {
@@ -54,9 +53,9 @@ export default function LoginByEmail() {
         setLogin(loginList);
         setLogged(true);
         const userEmail = list.find(item => item.email === data.userEmail)?.email;
-        await setByEmail(userEmail || alert("없는 아이디")); 
+        setByEmail(userEmail); 
         setEmailLogin(true);
-        tutorialOrNot(byEmail)
+        tutorialOrNot(userEmail)
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -68,6 +67,7 @@ export default function LoginByEmail() {
     setLogin(false);
     setLogged(false);
     setEmailLogin(false);
+    setByEmail('')
     router.push("/"); 
   }
 
