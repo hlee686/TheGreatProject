@@ -30,3 +30,10 @@
   background-color: #e74c3c;
   color: #fff;
 }
+
+/* Line.css */
+.line {
+  width: 30%; /* 가로 길이 조절 */
+  height: 2px; /* 선의 두께 조절 */
+  background-color: #F6D86A; /* 선의 색상 설정 */
+}

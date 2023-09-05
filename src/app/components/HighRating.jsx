@@ -98,7 +98,7 @@ export default function HighRating() {
                   <img
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                     alt="Poster"
-                    style={{ width: '300px', height: '300px', marginRight: '10px' }}
+                    style={{ width: '300px', height: '300px', marginRight: '10px', borderRadius: "20px" }}
                     onClick={() => {
                       if (totalPoint < 0) {
                         alert('포인트가 부족합니다');
@@ -113,7 +113,7 @@ export default function HighRating() {
                   <img
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                     alt="Poster"
-                    style={{ width: '300px', height: '300px', marginRight: '10px' }}
+                    style={{ width: '300px', height: '300px', marginRight: '10px', borderRadius: "20px" }}
                     onClick={() => {
                       if (totalPoint < 0) {
                         alert('포인트가 부족합니다');

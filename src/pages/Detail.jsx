@@ -52,6 +52,7 @@ export default function Detail() {
   
   const [splitP, setSplitP] = useState(false)
   const [imgSource, setImgSource] = useAtom(imgSrc)
+  const [grammarCnt, setGrammarCnt] = useState(false)
 
 
   const router = useRouter()
