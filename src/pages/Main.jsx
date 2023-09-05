@@ -182,7 +182,8 @@ export default function Main() {
     signOut();
     localStorage.removeItem("id");
     localStorage.removeItem("email")
-    setEmailLogin(false); 
+    setEmailLogin(false);
+    setLoginEmail(""); 
     setEmail(''); 
   }
 
@@ -226,7 +227,7 @@ export default function Main() {
       <div key={idx} style={{ marginLeft: "10px" }}>
         {/* {idx + 1}위: {(item.email || item.emailLogin)}님 /{" "}
         {item.points + 20}점 */}
-        {idx+1}
+        {idx+1}위
         <img
           src={getImgSrcForEmail(item.email || item.emailLogin)}
           style={{ width: "120px", height: "120px", marginRight: "100px", border: "1px solid black", borderRadius: "50px" }}

@@ -1,7 +1,14 @@
-// next.config.js
-module.exports = {
-  env: {
-    SERVER: "http://localhost:3000",
-  }
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+  async rewrites() {
+    return [
+      {
+        source: "/:path*",
+        destination: "http://localhost:3000/:path*",
+      },
+    ];
+  },
 };
 
+module.exports = nextConfig;
