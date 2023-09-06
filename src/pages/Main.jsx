@@ -217,11 +217,11 @@ export default function Main() {
   return (
     <div style={{textAlign: "center", margin:"50px", justifyContent: "center"}}>
    <img style={{marginLeft: "-580px", width: "90px", height: "90px"}} src="https://i.imgur.com/IRK0ITr.png" />
-    <img style={{marginBottom: "40px", width: "90px", height: "25px"}} src="https://i.imgur.com/JtKo7BY.png" />
+    <img style={{marginBottom: "30px", width: "90px", height: "25px"}} src="https://i.imgur.com/JtKo7BY.png" />
 
 
-<div style={{backgroundColor: "yellow", borderRadius: "10px", marginLeft: "420px", width: "620px", height: "33px", border: "1px solid black"}}>{point ? point+20 : pointVal +20}점 획득! {loginEmail || email} 님은 현재 {" "}
-       {rankNum} 
+<div style={{backgroundColor: "yellow", borderRadius: "10px", marginLeft: "420px", width: "620px", height: "33px", border: "1px solid black"}}><span style={{fontWeight: 'bold'}}>{point ? point+20 : pointVal +20}</span>점 획득! <span style={{fontWeight: 'bold'}}>{loginEmail || email}</span> 님은 현재 {" "}
+       <span style={{fontWeight: 'bold'}}>{rankNum}</span>
        입니다. 랭킹에 도전해보세요!</div>
 <h2 style={{marginLeft: "-540px"}}>이번주 랭킹</h2>
 <div style={{ display: "flex", flexDirection: "row" , justifyContent: "center"}}>

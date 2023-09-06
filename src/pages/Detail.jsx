@@ -453,7 +453,7 @@ useEffect(()=>{
                     <button onClick={() => updateExp()}>응용하기</button>
                   </div>
                 ) : (
-                  <div style={{ backgroundColor: "orange", width: "250px" }}>
+                  <div style={{ border: "1px solid black", marginBottom: "10px", borderRadius: "5px", width: "250px" }}>
                     <p>{item.text}</p>
                     <div style={{ color: "blue", fontStyle: 'italic' }} onClick={() => byEmail(item.emailLogin)}>{item.email || item.emailLogin}<span style={{ color: "black" }}>님의 표현</span></div>
                   </div>
